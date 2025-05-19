@@ -1,0 +1,381 @@
+<html lang="en">
+<head>
+    <!-- Google Tag Manager -->
+ 
+    <!-- End Google Tag Manager -->
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="NextPlay, movies, TV shows, live tv streaming, K-Drama, anime, animation, online entertainment">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="img/Netplex.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="css/movie-details.css">
+    <link rel="preload" href="css/movie-details.css" as="style">
+    <link rel="preload" href="js/movie-details.js" as="script">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script defer src="js/movie-details.js"></script>
+    <script src="security.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="adsterraMoviePopunder.js"></script>
+    
+    <!-- Google Adsense Start -->
+
+    <!-- Google Adsense End -->
+
+    <!-- PopAds Start -->
+    
+    <!-- PopAds End -->
+    
+</head>   
+    
+<body>
+<!-- Google Tag Manager (noscript) -->
+
+<!-- End Google Tag Manager (noscript) -->   
+
+    
+<div id="loading-container" style="display: none;">
+    <div id="loading-spinner">
+      <div class="spinner"></div>
+    </div>
+    <div id="loading-message">
+      <p>Selecting Available Sources...</p>
+    </div>
+    <div id="server-selection-container">
+      <!-- Dynamic server selection will appear here -->
+    </div>
+  </div>  
+
+     <!-- Loading Screen -->
+     <div id="loading-screen" class="loading-screen">
+        <div class="spinner"></div>
+        <p class="loading-text">Loading...</p> <!-- Add this text -->
+    </div>
+
+    <div class="blurred-background"></div> <!-- Background Container -->
+    
+    <div class="movie-details">
+        <!-- Close Button (X) -->
+        <button class="close-button" id="close-button"><span class="close-text">CLOSE</span>
+    &times; 
+</button>
+
+        <!-- Poster Container -->
+        <div class="movie-poster-container">
+            <img id="movie-poster" alt="Movie Poster" class="movie-poster" src="images/https://zinemax.netlify.app">
+            <!-- Button Container -->
+            <div class="button-container">
+                <button id="watch-now-btn" class="watch-now-btn"><b><h2>WATCH NOW!</h2></b></button>
+            </div>
+<!-- Iframe container (hidden by default) -->
+<div id="iframe-container" style="display:none;">
+    <button id="close-iframe-btn">Close</button>
+    <button id="change-server-btn">Change Server</button>
+    <button onclick="toggleFullscreen()" class="fullscreen-btn">Fullscreen</button>
+        <!-- Dropdown for changing server -->
+        <div id="server-dropdown" class="server-dropdown" style="display:none;">
+            <ul id="server-list">
+                <!-- Server options will be populated here -->
+            </ul>
+        </div>
+
+    
+<!-- Iframe For Movie Start -->    
+    <iframe id="movie-iframe" width="100%" height="400" frameborder="0"  allowfullscreen= "" referrerpolicy="no-referrer" scrolling="no" sandbox="allow-scripts allow-presentation allow-same-origin"></iframe> 
+  </div>
+<!-- Iframe For Movie End -->
+    
+        <h1 id="movie-title"></h1>
+        <p id="movie-description"></p>
+
+        <!-- Genre Section -->
+        <div class="movie-genres" id="movie-genres"></div>
+
+        <div class="movie-info">
+            <div class="movie-rating" id="movie-rating"></div>
+            <div class="movie-release-date" id="movie-release-date">
+                <i class="fas fa-calendar-alt"></i> <!-- Calendar Icon -->
+                <span id="release-date-text"></span> <!-- The actual release date -->
+            </div>
+                    </div>
+
+        <div id="movie-release-date-container">
+            <span id="movie-release-date"></span>
+            <!-- Trailer Section -->
+            <div id="movie-trailer-container" style="display: none;">
+                <iframe id="movie-iframe" width="100%" height="400" frameborder="0" allowfullscreen 
+    sandbox="allow-scripts allow-same-origin allow-popups" referrerpolicy="origin" scrolling="no"></iframe>
+
+            </div>
+        </div>        
+
+        <!-- Cast Section -->
+        <div class="movie-cast" id="movie-cast"></div>
+    </div>
+           
+
+<!-- Floating Message Start-->
+<div id="floating-message">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <h2>Notice!</h2><br>
+    <h>
+        AD will open. Press Back to continue watching!<br><br>
+        If the video doesn't work,<br> 
+        switch to another SERVER!<br><br> 
+        If all servers are not working for that specific video, try our site version 2 with more servers:<br> 
+        <a href="https://netplex-v2.pages.dev" target="_blank" style="color: #8A00C4; text-decoration: none;">https://netplex-v2.pages.dev</a>
+    </h><button onclick="window.location.href='https://netplex-v2.pages.dev'">V2</button>
+    <br>
+    <button onclick="closeMessage()">CLOSE</button>
+    
+</div>
+<!-- Floating Message End-->
+
+</div> 
+
+
+<!-- Welcome Message Section -->
+  <div id="welcomeMessage">
+    Welcome to <b>MEXTPLAY</b>
+  </div>
+
+  <!-- Leave a Comment Section -->
+  <div id="leaveCommentMessage">
+    Please leave a comment below about the Movie/Tv Show.
+  </div>
+
+  <div id="commentForm">
+    <input type="text" id="username" placeholder="Enter Username">
+    <textarea id="commentText" placeholder="Write a comment..."></textarea>
+    
+    <div id="avatarSelection">
+      <p>Select your avatar:</p>
+      <div id="avatarContainer"></div>
+      <img id="avatarPreview" src="https://example.com/profile1.jpg" alt="Selected Avatar">
+    </div>
+
+    <button onclick="submitComment()">Post Comment</button>
+  </div>
+
+  <div id="commentsContainer"></div> 
+
+       
+
+
+<!-- Adsterra DL 11,3,1 & 4 Ad Container Start -->
+ 
+<!-- Adsterra DL 11,3,1 & 4 Ad Container End --> 
+
+<!-- ONLINE STAT WIDGET CODE START --> 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<!-- Widget Styles -->
+<style>
+  #online-widget {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: #111;
+    color: #0ff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 14px;
+    z-index: 9999;
+    user-select: none;
+    cursor: pointer;
+    overflow: hidden;
+    width: 200px;
+    max-height: 400px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  #online-widget-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid #0ff2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #online-widget-content {
+    padding: 10px 18px;
+    display: none;
+    overflow-y: auto;
+    max-height: 300px;
+  }
+
+  #online-widget.expanded #online-widget-content {
+    display: block;
+  }
+
+  #online-widget-toggle {
+    font-weight: bold;
+    color: #fff;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+  }
+
+  #online-widget.expanded #online-widget-toggle {
+    transform: rotate(180deg);
+  }
+
+  .region-stat {
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 600px) {
+    #online-widget {
+      left: 20px;
+      bottom: 20px;
+      width: 90%;
+      max-width: 180px;
+      font-size: 14px;
+    }
+
+    #online-widget-content {
+      max-height: 250px;
+    }
+
+    .region-stat {
+      font-size: 12px;
+    }
+
+    #online-widget-header {
+      padding: 10px 14px;
+    }
+
+    #online-widget-content {
+      padding: 8px 14px;
+    }
+  }
+</style>
+
+
+<!-- Widget HTML -->
+<div id="online-widget">
+  <div id="online-widget-header">
+    👥 <span id="online-count">...</span> online
+    <span id="online-widget-toggle">▲</span>
+  </div>
+  <div id="online-widget-content">
+    🔁 Visits: <span id="visit-count">...</span><br>
+    📊 Peak: <span id="peak-users">...</span><br>
+    🌍 You: <span id="geo-data">loading...</span><br><br>
+    <strong>🌐 Online by Region:</strong>
+    <div id="region-breakdown" class="region-stat">Loading...</div>
+  </div>
+</div>
+
+<!-- JS Logic -->
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDLvkuFdhBnu-TppkLE-Q2-FQlBxCbwv4Y",
+  authDomain: "nextplay-01.firebaseapp.com",
+  databaseURL: "https://nextplay-01-default-rtdb.firebaseio.com",
+  projectId: "nextplay-01",
+  storageBucket: "nextplay-01.firebasestorage.app",
+  messagingSenderId: "945532911390",
+  appId: "1:945532911390:web:78e846994add3c4bbb930f",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const presenceRef = db.ref("presence");
+  const visitsRef = db.ref("siteStats/visits");
+  const peakRef = db.ref("siteStats/peakUsers");
+  const sessionsRef = db.ref("siteStats/sessions");
+
+  const localID = localStorage.getItem("netplex_uid") || (() => {
+    const uid = 'user_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("netplex_uid", uid);
+    return uid;
+  })();
+
+  const myRef = presenceRef.child(localID);
+
+  const sessionStart = Date.now();
+
+  // Fetch geolocation
+  fetch("https://ipinfo.io/json?token=346b6b7e9af5c8")
+    .then(res => res.json())
+    .then(data => {
+      const location = `${data.city || ''}, ${data.region || ''}`;
+      const country = data.country || "Unknown";
+      const region = data.region || "Unknown";
+      document.getElementById("geo-data").textContent = location;
+
+      // Mark presence with location
+      myRef.set({
+        online: true,
+        country: country,
+        region: region
+      });
+      myRef.onDisconnect().remove();
+    })
+    .catch(() => {
+      document.getElementById("geo-data").textContent = "Unknown";
+      myRef.set({ online: true });
+      myRef.onDisconnect().remove();
+    });
+
+  // Save session time on unload (in background, optional)
+  window.addEventListener("beforeunload", () => {
+    const timeSpent = Math.floor((Date.now() - sessionStart) / 1000);
+    sessionsRef.child(localID).push({ time: timeSpent, timestamp: Date.now() });
+  });
+
+  visitsRef.transaction(val => (val || 0) + 1);
+  visitsRef.on("value", snap => {
+    document.getElementById("visit-count").textContent = snap.val();
+  });
+
+  peakRef.on("value", snap => {
+    document.getElementById("peak-users").textContent = snap.val() || 0;
+  });
+
+  presenceRef.on("value", snap => {
+    const count = snap.numChildren();
+    document.getElementById("online-count").textContent = count;
+
+    peakRef.transaction(peak => (!peak || count > peak) ? count : peak);
+
+    // Group users by country/region
+    const regionStats = {};
+    snap.forEach(child => {
+      const data = child.val();
+      if (data.region && data.country) {
+        const key = `${data.region}, ${data.country}`;
+        regionStats[key] = (regionStats[key] || 0) + 1;
+      }
+    });
+
+    const regionHTML = Object.entries(regionStats)
+      .map(([region, count]) => {
+  const countryCode = region.split(', ').pop().toLowerCase(); // "us"
+  const flagImg = `<img src="https://flagcdn.com/16x12/${countryCode}.png" style="width:16px;height:12px;vertical-align:middle;margin-right:4px">`;
+  return `${flagImg} ${region}: ${count}`;
+})
+
+      .join("<br>");
+    document.getElementById("region-breakdown").innerHTML = regionHTML || "No region data.";
+  });
+
+  // Toggle expand
+  document.getElementById("online-widget-header").addEventListener("click", () => {
+    document.getElementById("online-widget").classList.toggle("expanded");
+  });
+</script>   
+<!-- ONLINE STAT WIDGET CODE END -->  
+    
+</body>
+</html>
