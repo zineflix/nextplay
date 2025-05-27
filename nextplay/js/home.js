@@ -72,8 +72,8 @@ async function fetchMedia(url, containerId, type, pages = 3) {
 // Load Data
 fetchBanner();
 fetchMedia(`${baseURL}/discover/movie?api_key=${apiKey}&vote_count.gte=500&vote_average=10`, "popular-movies", "movie", 5);
-fetchMedia(`${baseURL}/discover/tv?api_key=${apiKey}&vote_count.gte=10000&vote_average=10`, "popular-tv-shows", "tv", 5);
-fetchMedia(`${baseURL}/discover/tv?api_key=${apiKey}&with_origin_country=KR&vote_count.gte=500`, "korean-tv-shows", "tv", 5);
+fetchMedia(`${baseURL}/discover/tv?api_key=${apiKey}&vote_count.gte=5000&vote_average=10`, "popular-tv-shows", "tv", 5);
+fetchMedia(`${baseURL}/discover/tv?api_key=${apiKey}&with_origin_country=KR&vote_count.gte=300`, "korean-tv-shows", "tv", 5);
 fetchMedia(`${baseURL}/discover/tv?api_key=${apiKey}&with_origin_country=JP&with_genres=16&vote_count.gte=500`, "japanese-animations", "tv", 5);
 fetchMedia(`${baseURL}/discover/movie?api_key=${apiKey}&with_companies=149142`, "philippine-movies", "movie", 5);
 
