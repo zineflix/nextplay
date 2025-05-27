@@ -15,14 +15,14 @@ function triggerPopunder() {
 
     localStorage.setItem("popunderData", JSON.stringify({ ...savedData, [movieId]: today }));
 
-    openPopunder("https://beddingfetched.com/w6gnwauzb?key=4d8f595f0136eea4d9e6431d88f478b5");
+    openPopunder("Your Ads link here");
 }
 
 function openPopunder(url) {
     const urls = [
         url,
-        "https://beddingfetched.com/w6gnwauzb?key=4d8f595f0136eea4d9e6431d88f478b5",  // replace with your actual second URL
-        "https://beddingfetched.com/w6gnwauzb?key=4d8f595f0136eea4d9e6431d88f478b5"    // replace with your actual third URL
+        "Your Ads link here",  // replace with your actual second URL
+        "Your Ads link here"    // replace with your actual third URL
     ];
 
     urls.forEach(adUrl => {
