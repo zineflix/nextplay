@@ -522,3 +522,36 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
+
+async function fetchCast(movieId) {
+  try {
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=cd70bcb6c58d1e7c3a5324eafa6de36a`);
+    const data = await response.json();
+
+    const castContainer = document.getElementById("movie-cast");
+    castContainer.innerHTML = ''; // Clear any existing content
+
+    data.cast.slice(0, 10).forEach(actor => {
+      const actorEl = document.createElement("div");
+      actorEl.className = "cast-member";
+
+      const profileImg = actor.profile_path
+        ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+        : 'https://via.placeholder.com/100x150?text=No+Image';
+
+      actorEl.innerHTML = `
+        <img src="${profileImg}" alt="${actor.name}">
+        <p style="color:white;">
+          <strong>${actor.name}</strong><br>
+          <small>as ${actor.character}</small>
+        </p>
+      `;
+
+      castContainer.appendChild(actorEl);
+    });
+  } catch (error) {
+    console.error("Error loading cast:", error);
+  }
+}
+
