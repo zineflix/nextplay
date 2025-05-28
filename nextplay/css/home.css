@@ -713,3 +713,21 @@ background-color: #8A00C4; /* Darker green on hover */
   color: #cfcfcf;
 }
 /* Feature End*/
+
+/* Banner Play button Start */
+.play-button-banner {
+  background-color: #8A00C4;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.play-button-banner:hover {
+  background-color: #f40612;
+}
+/* Banner Play button End */
