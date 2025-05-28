@@ -416,10 +416,11 @@ body {
   flex-wrap: wrap;
 }
 
-.movie-cast .cast-member {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.movie-cast .cast-member p {
+  color: white; /* or any visible color */
+  font-size: 1rem;
+  max-width: 100px;
+  text-align: center;
 }
 
 .movie-cast .cast-member img {
