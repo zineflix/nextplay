@@ -555,3 +555,4 @@ async function fetchCast(movieId) {
   }
 }
 
+fetchCast(movieId); // Replace `movieId` with the actual TMDB movie ID
