@@ -18,15 +18,26 @@ async function fetchBanner() {
     banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${randomItem.backdrop_path})`;
     bannerTitle.textContent = randomItem.title || randomItem.name;
     bannerDescription.textContent = randomItem.overview || "No description available.";
-    
+
     // Fetch genres
-    const genresResponse = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=en-US`);
+    const genresResponse = await fetch(`${baseURL}/genre/movie/list?api_key=${apiKey}&language=en-US`);
     const genresData = await genresResponse.json();
     const genreMap = Object.fromEntries(genresData.genres.map(g => [g.id, g.name]));
     const genreNames = (randomItem.genre_ids || []).map(id => genreMap[id]).join(", ");
-    
+
     bannerGenre.textContent = `Genre: ${genreNames || "Unknown"}`;
+
+    // Attach click event to banner play button
+    const playButton = document.getElementById("banner-play-button");
+    playButton.onclick = () => {
+        const isMovie = randomItem.media_type === "movie";
+        const id = randomItem.id;
+        window.location.href = isMovie
+            ? `movie-details.html?movie_id=${id}`
+            : `tvshows-details.html?id=${id}`;
+    };
 }
+
 
 fetchBanner();
 
