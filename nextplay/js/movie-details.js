@@ -524,9 +524,18 @@ function toggleFullscreen() {
 // Fullscreen Button Movie End //
 
 
+
+const API_KEY = 'YOUR_TMDB_API_KEY'; // Replace with your TMDB API key
+
+// Automatically extract movieId from the URL
+function getMovieIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id'); // Make sure your movie URL looks like ?id=12345
+}
+
 async function fetchCast(movieId) {
   try {
-    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=cd70bcb6c58d1e7c3a5324eafa6de36a`);
+    const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${API_KEY}`);
     const data = await response.json();
 
     const castContainer = document.getElementById("movie-cast");
@@ -542,17 +551,22 @@ async function fetchCast(movieId) {
 
       actorEl.innerHTML = `
         <img src="${profileImg}" alt="${actor.name}">
-        <p style="color:white;">
-          <strong>${actor.name}</strong><br>
-          <small>as ${actor.character}</small>
-        </p>
+        <p style="color:white;">${actor.name}<br><small style="color:gray;">as ${actor.character}</small></p>
       `;
-
       castContainer.appendChild(actorEl);
     });
   } catch (error) {
-    console.error("Error loading cast:", error);
+    console.error('Failed to load cast data:', error);
   }
 }
 
-fetchCast(movieId); // Replace `movieId` with the actual TMDB movie ID
+// Load cast on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const movieId = getMovieIdFromURL();
+  if (movieId) {
+    fetchCast(movieId);
+  } else {
+    console.warn("No movie ID found in URL.");
+  }
+});
+
