@@ -2388,3 +2388,15 @@ meta[http-equiv="refresh"] {
 /* Adsterra DL Style Ad Container Start */
  
 /* Adsterra DL Style Ad Container End */
+
+.movie-layout-row {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  flex-wrap: wrap; /* Helps on smaller screens */
+}
+
+.movie-description-container {
+  max-width: 600px;
+}
+
