@@ -2422,9 +2422,13 @@ meta[http-equiv="refresh"] {
 
 
 @media (max-width: 768px) {
-  .movie-meta {
+  .movie-layout-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+  }
+
+  .movie-description-container {
+    text-align: center;
   }
 }
 
