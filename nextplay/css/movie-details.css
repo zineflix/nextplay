@@ -2400,3 +2400,13 @@ meta[http-equiv="refresh"] {
   max-width: 600px;
 }
 
+@media (max-width: 768px) {
+  .movie-layout-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-description-container {
+    text-align: center;
+  }
+}
