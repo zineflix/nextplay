@@ -67,12 +67,21 @@
 </button>
 
         <!-- Poster Container -->
-        <div class="movie-poster-container">
-            <img id="movie-poster" alt="Movie Poster" class="movie-poster" src="images/https://zinemax.netlify.app">
-            <!-- Button Container -->
-            <div class="button-container">
-                <button id="watch-now-btn" class="watch-now-btn"><b><h2>WATCH NOW!</h2></b></button>
-            </div>
+        <div class="movie-layout-row">
+    <div class="movie-poster-container">
+        <img id="movie-poster" alt="Movie Poster" class="movie-poster" src="images/https://zinemax.netlify.app">
+        <div class="button-container">
+            <button id="watch-now-btn" class="watch-now-btn"><b><h2>WATCH NOW!</h2></b></button>
+        </div>
+    </div>
+    
+    <div class="movie-description-container">
+        <h1 id="movie-title"></h1>
+        <p id="movie-description"></p>
+    </div>
+</div>
+
+            
 <!-- Iframe container (hidden by default) -->
 <div id="iframe-container" style="display:none;">
     <button id="close-iframe-btn">Close</button>
@@ -91,8 +100,6 @@
   </div>
 <!-- Iframe For Movie End -->
     
-        <h1 id="movie-title"></h1>
-        <p id="movie-description"></p>
 
         <!-- Genre Section -->
         <div class="movie-genres" id="movie-genres"></div>
