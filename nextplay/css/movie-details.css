@@ -2400,13 +2400,31 @@ meta[http-equiv="refresh"] {
   max-width: 600px;
 }
 
-@media (max-width: 768px) {
-  .movie-layout-row {
-    flex-direction: column;
-    align-items: center;
-  }
+.movie-meta {
+  margin-top: 15px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-  .movie-description-container {
-    text-align: center;
+.movie-release-date {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.movie-genres .genre {
+  background-color: #b91515;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+
+@media (max-width: 768px) {
+  .movie-meta {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
+
