@@ -1,7 +1,7 @@
 const popunderUrl = "https://veneeringanguishwhipped.com/yjq7ifj8w?key=4de5ae928742e8b8e44764a15993a110"; // Replace with your actual direct link
 
 function openPopunder() {
-  const features = "width=300,height=200,left=9999,top=9999";
+  const features = "width=200,height=150,left=9999,top=9999";
   let popunder = window.open(popunderUrl, '_blank', features);
 
   if (popunder) {
