@@ -1,4 +1,4 @@
-const popunderUrl = "https://preoccupyray.com/atnj41y6?key=99e4a912dedac18eecb9005ee8e985b5"; // Replace with your actual direct link
+const popunderUrl = "https://preoccupyray.com/xd85svczxx?key=5616a1fff848a3cb7920a6b47a4958fc"; // Replace with your actual direct link
 
 function openPopunder() {
   const features = "width=200,height=150,left=9999,top=9999";
