@@ -1,4 +1,4 @@
-const apiKey = 'cd70bcb6c58d1e7c3a5324eafa6de36a'; // Your TMDB API Key
+const apiKey = 'a1e72fd93ed59f56e6332813b9f8dcae'; // Your TMDB API Key
 const baseUrl = 'https://api.themoviedb.org/3';
 
 // Helper function to fetch movies and populate the row
@@ -288,6 +288,33 @@ const fetchMovieDetails = async () => {
         // Movie Description
         document.getElementById('movie-description').textContent = movie.overview;
 
+        // Fetch and display cast
+const castUrl = `${baseUrl}/movie/${movieId}/credits?api_key=${apiKey}&language=en-US`;
+const castResponse = await fetch(castUrl);
+const castData = await castResponse.json();
+
+const castContainer = document.getElementById('movie-cast');
+castContainer.innerHTML = ''; // Clear old cast
+
+castData.cast.slice(0, 6).forEach(actor => {
+    const member = document.createElement('div');
+    member.classList.add('cast-member');
+
+    const img = document.createElement('img');
+    img.src = actor.profile_path
+      ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+      : 'https://via.placeholder.com/100x150?text=No+Image';
+    member.appendChild(img);
+
+    const name = document.createElement('p');
+    name.textContent = actor.name;
+    name.style.color = 'white';
+    member.appendChild(name);
+
+    castContainer.appendChild(member);
+});
+
+
         // Movie Rating (star rating)
         const movieRating = movie.vote_average; // Rating from 1 to 10
         const starContainer = document.getElementById('movie-rating');
@@ -460,7 +487,7 @@ document.addEventListener('DOMContentLoaded', initArrowNavigation);
 
 // JavaScript for the Close Button
 document.getElementById('close-button').addEventListener('click', () => {
-    window.location.href = 'index.html';  // Redirects to the main page (index.html)
+    window.location.href = 'movies.html';  // Redirects to the main page (index.html)
 });
 
 window.addEventListener("load", function() {
