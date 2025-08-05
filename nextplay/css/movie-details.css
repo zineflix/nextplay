@@ -2276,14 +2276,14 @@ meta[http-equiv="refresh"] {
 
 
 .movie-release-date {
-  background-color: #b91515;
+  background-color: rgba(51, 51, 51, 0.5);
   padding: 5px 10px;
   border-radius: 8px;
   font-size: 0.9rem;
 }
 
 .movie-genres .genre {
-  background-color: #b91515;
+  background-color: rgba(51, 51, 51, 0.5);
   padding: 5px 10px;
   border-radius: 8px;
   font-size: 0.9rem;
