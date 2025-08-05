@@ -436,9 +436,6 @@ changeServerBtn.addEventListener('click', () => {
         serverList.appendChild(serverItem);
     });
 });
-
-// ✅ Fetch and display cast after everything else
-fetchCast();
         
     } catch (error) {
         console.error('Error fetching TV show details:', error);
@@ -575,6 +572,7 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
 
 
 
