@@ -315,39 +315,18 @@ castData.cast.slice(0, 6).forEach(actor => {
 });
 
 
-// ===== ✅ Fetch Trailer and Display It (Safe Version) ===== //
-// ✅ Fetch and display the trailer
-const trailerUrl = `${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
-const trailerResponse = await fetch(trailerUrl);
-const trailerData = await trailerResponse.json();
+// Fetch trailer (YouTube)
+const videoUrl = `${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
+const videoResponse = await fetch(videoUrl);
+const videoData = await videoResponse.json();
 
-const trailerContainer = document.getElementById('movie-trailer-container');
-const trailerIframe = document.getElementById('movie-iframe-trailer');
-
-// Debug: Log all trailers
-console.log('Trailer data:', trailerData);
-
-if (trailerData && trailerData.results && trailerData.results.length > 0) {
-    // Find a proper YouTube trailer (not teaser)
-    const trailer = trailerData.results.find(video =>
-        video.site === 'YouTube' &&
-        video.type === 'Trailer' &&
-        video.key
-    );
-
-    if (trailer) {
-        const trailerSrc = `https://www.youtube.com/embed/${trailer.key}`;
-        trailerIframe.src = trailerSrc;
-        trailerContainer.style.display = 'block';
-        console.log('Loaded trailer:', trailerSrc);
-    } else {
-        console.warn('❌ No suitable YouTube trailer found.');
-        trailerContainer.style.display = 'none';
-    }
-} else {
-    console.warn('❌ No trailer data returned from TMDB.');
-    trailerContainer.style.display = 'none';
+const trailer = videoData.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+if (trailer) {
+  const trailerIframe = document.getElementById('movie-iframe-trailer');
+  trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+  document.getElementById('movie-trailer-container').style.display = 'block';
 }
+
 
 
         
