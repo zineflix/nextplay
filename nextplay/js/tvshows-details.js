@@ -437,6 +437,9 @@ changeServerBtn.addEventListener('click', () => {
     });
 });
 
+// ✅ Fetch and display cast after everything else
+fetchCast();
+        
     } catch (error) {
         console.error('Error fetching TV show details:', error);
     }
@@ -611,3 +614,4 @@ const fetchCast = async () => {
     console.error('Error fetching cast:', error);
   }
 };
+
