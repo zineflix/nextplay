@@ -522,7 +522,7 @@ body {
 }
 
 .genre {
-  background-color: #b91515;
+  background-color: rgba(51, 51, 51, 0.5);
   color: #fff;
   padding: 5px 15px;
   border-radius: 10px;
