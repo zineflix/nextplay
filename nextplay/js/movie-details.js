@@ -288,6 +288,25 @@ const fetchMovieDetails = async () => {
         // Movie Description
         document.getElementById('movie-description').textContent = movie.overview;
 
+        // ===== ✅ Fetch Trailer and Display It ===== //
+        const trailerUrl = `${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
+        const trailerResponse = await fetch(trailerUrl);
+        const trailerData = await trailerResponse.json();
+
+        const trailerContainer = document.getElementById('movie-trailer-container');
+        const trailerIframe = document.getElementById('movie-iframe-trailer');
+
+        const trailer = trailerData.results.find(video =>
+            video.type === 'Trailer' && video.site === 'YouTube'
+        );
+
+        if (trailer) {
+            trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+            trailerContainer.style.display = 'block'; // Show the trailer
+        } else {
+            trailerContainer.style.display = 'none'; // Hide if not available
+        }
+        
         // Fetch and display cast
 const castUrl = `${baseUrl}/movie/${movieId}/credits?api_key=${apiKey}&language=en-US`;
 const castResponse = await fetch(castUrl);
