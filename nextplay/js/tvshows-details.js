@@ -577,29 +577,5 @@ function toggleFullscreen() {
 // Fullscreen Button Movie End //
 
 
-  // Fetch and display cast
-  const castUrl = `${baseUrl}/tv/${tvId}/credits?api_key=${apiKey}&language=en-US`;
-  const castResponse = await fetch(castUrl);
-  const castData = await castResponse.json();
 
-  const castContainer = document.getElementById('movie-cast');
-  castContainer.innerHTML = '';
-
-  castData.cast.slice(0, 6).forEach(actor => {
-    const member = document.createElement('div');
-    member.classList.add('cast-member');
-
-    const img = document.createElement('img');
-    img.src = actor.profile_path
-      ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-      : 'https://via.placeholder.com/100x150?text=No+Image';
-    member.appendChild(img);
-
-    const name = document.createElement('p');
-    name.textContent = actor.name;
-    name.style.color = 'white';
-    member.appendChild(name);
-
-    castContainer.appendChild(member);
-  });
 
