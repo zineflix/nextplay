@@ -240,207 +240,103 @@ const fetchTVShowDetails = async () => {
         }
         const tvShow = await response.json();
 
-        // Populate poster and details
-        const posterUrl = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
-        document.getElementById('tv-show-poster').src = posterUrl;
-
-        const backdropUrl = tvShow.backdrop_path ? `https://image.tmdb.org/t/p/original${tvShow.backdrop_path}` : 'https://via.placeholder.com/1500x800?text=No+Backdrop+Available';
+        // Poster and details
+        document.getElementById('tv-show-poster').src = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
         document.querySelector('.blurred-background').style.backgroundImage = `none`;
-
         document.getElementById('tv-show-description').textContent = tvShow.overview;
 
-        // Tv Show Rating (star rating)
-        const tvShowRating = tvShow.vote_average; // Rating from 1 to 10
+        // Rating stars
         const starContainer = document.getElementById('tv-show-rating');
-        starContainer.innerHTML = ''; // Clear existing stars
-
-        const filledStars = Math.round(tvShowRating / 2); // Convert 10-point rating to 5-point scale
+        starContainer.innerHTML = '';
+        const filledStars = Math.round(tvShow.vote_average / 2);
         const emptyStars = 5 - filledStars;
-
-        // Add filled stars
         for (let i = 0; i < filledStars; i++) {
             const star = document.createElement('span');
             star.classList.add('star', 'filled');
             starContainer.appendChild(star);
         }
-
-        // Add empty stars
         for (let i = 0; i < emptyStars; i++) {
             const star = document.createElement('span');
             star.classList.add('star', 'empty');
             starContainer.appendChild(star);
         }
 
-        const tvShowFirstAirDate = "2025-01-25"; // Example air date
+        document.getElementById('air-date-text').textContent = `: ${tvShow.first_air_date}`;
 
-        // Set the air date in the element
-        document.getElementById('air-date-text').textContent = `: ${tvShowFirstAirDate}`;
-
+        // Genres
         const genreContainer = document.getElementById('tv-show-genres');
         genreContainer.innerHTML = '';
         tvShow.genres.forEach(genre => {
-            const genreElement = document.createElement('span');
-            genreElement.classList.add('genre');
-            genreElement.textContent = genre.name;
-            genreContainer.appendChild(genreElement);
+            const span = document.createElement('span');
+            span.classList.add('genre');
+            span.textContent = genre.name;
+            genreContainer.appendChild(span);
         });
 
-        // Fetch Seasons
+        // 🔽 Fetch trailer
+        const videoRes = await fetch(`${baseUrl}/tv/${tvShowId}/videos?api_key=${apiKey}&language=en-US`);
+        const videoData = await videoRes.json();
+        const trailer = videoData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+        if (trailer) {
+            const trailerIframe = document.getElementById('movie-iframe-trailer');
+            trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+            document.getElementById('movie-trailer-container').style.display = 'block';
+        }
+
+        // 🔽 Fetch and display cast
+        const castRes = await fetch(`${baseUrl}/tv/${tvShowId}/credits?api_key=${apiKey}&language=en-US`);
+        const castData = await castRes.json();
+        const castContainer = document.getElementById('movie-cast');
+        castContainer.innerHTML = '';
+        castData.cast.slice(0, 6).forEach(actor => {
+            const member = document.createElement('div');
+            member.classList.add('cast-member');
+
+            const img = document.createElement('img');
+            img.src = actor.profile_path
+                ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                : 'https://via.placeholder.com/100x150?text=No+Image';
+            member.appendChild(img);
+
+            const name = document.createElement('p');
+            name.textContent = actor.name;
+            name.style.color = 'white';
+            member.appendChild(name);
+
+            castContainer.appendChild(member);
+        });
+
+        // 🔽 Seasons
         const seasonsContainer = document.getElementById('seasons-list');
-        seasonsContainer.innerHTML = ''; // Reset seasons container
+        seasonsContainer.innerHTML = '';
         tvShow.seasons.forEach(season => {
-            const seasonItem = document.createElement('li');
-            const seasonImageUrl = season.poster_path
+            const li = document.createElement('li');
+            const img = document.createElement('img');
+            img.src = season.poster_path
                 ? `https://image.tmdb.org/t/p/w200${season.poster_path}`
-                : 'https://via.placeholder.com/100x150?text=No+Image'; // Fallback image if no poster
-
-            const seasonImage = document.createElement('img');
-            seasonImage.src = seasonImageUrl;
-            seasonImage.alt = `Season ${season.season_number}`;
-            seasonImage.style.width = '50px';  // Adjust the size of the image
-            seasonImage.style.marginRight = '10px'; // Space between the image and the text
-
-            seasonItem.appendChild(seasonImage); // Add the image to the season list item
-            seasonItem.appendChild(document.createTextNode(`Season ${season.season_number}`));
-
-            seasonItem.addEventListener('click', () => {
-                selectedSeason = season.season_number; // Track the selected season
-                loadEpisodes(selectedSeason); // Load episodes for that season
-                toggleDropdown('seasons-list'); // Close season dropdown
-                document.getElementById('episode-btn').style.display = 'block'; // Show episode button
+                : 'https://via.placeholder.com/100x150?text=No+Image';
+            img.alt = `Season ${season.season_number}`;
+            img.style.width = '50px';
+            img.style.marginRight = '10px';
+            li.appendChild(img);
+            li.appendChild(document.createTextNode(`Season ${season.season_number}`));
+            li.addEventListener('click', () => {
+                selectedSeason = season.season_number;
+                loadEpisodes(selectedSeason);
+                toggleDropdown('seasons-list');
+                document.getElementById('episode-btn').style.display = 'block';
             });
-
-            seasonsContainer.appendChild(seasonItem);
+            seasonsContainer.appendChild(li);
         });
 
-        
+        // Functions already defined below...
+        // loadEpisodes(seasonNumber), toggleDropdown(), playEpisode()...
 
-        // Toggle Dropdown visibility
-        const toggleDropdown = (dropdownId) => {
-            const dropdown = document.getElementById(dropdownId);
-            dropdown.classList.toggle('show');
-        };
-
-        // Load Episodes for the selected season
-        const loadEpisodes = async (seasonNumber) => {
-            const episodesUrl = `${baseUrl}/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`;
-            const episodesResponse = await fetch(episodesUrl);
-            const episodesData = await episodesResponse.json();
-
-            const episodesContainer = document.getElementById('episodes-list');
-            episodesContainer.innerHTML = ''; // Clear previous episodes
-
-            episodesData.episodes.forEach(episode => {
-                const episodeItem = document.createElement('li');
-                const episodeImage = document.createElement('img');
-                const episodeImageUrl = episode.still_path
-                    ? `https://image.tmdb.org/t/p/w200${episode.still_path}`
-                    : 'https://via.placeholder.com/100x150?text=No+Image'; // Fallback image if no still path
-
-                episodeImage.src = episodeImageUrl;
-                episodeImage.alt = `Episode ${episode.episode_number}`;
-                episodeImage.style.width = '50px'; // Adjust the size of the image
-                episodeImage.style.marginRight = '10px'; // Space between the image and the text
-
-                episodeItem.appendChild(episodeImage); // Add the image to the episode list item
-                episodeItem.appendChild(document.createTextNode(`Episode ${episode.episode_number}: ${episode.name}`));
-
-                episodeItem.addEventListener('click', () => {
-                    selectedEpisode = episode.episode_number;
-                    playEpisode(selectedEpisode, selectedSeason);
-                });
-
-                episodesContainer.appendChild(episodeItem);
-            });
-        };
-
-        // Play selected episode
-    const playEpisode = (episodeNumber, seasonNumber) => {
-    const selectedServerUrl = SERIES_ENDPOINTS[currentServerIndex].url;
-    console.log(`Trying to load from: ${selectedServerUrl}?autonext=1`);
-
-    const iframeContainer = document.getElementById('iframe-container');
-    iframeContainer.style.display = 'flex';
-
-    const iframe = document.getElementById('movie-iframe');
-    iframe.src = `${selectedServerUrl}${tvShowId}/${seasonNumber}/${episodeNumber}?autonext=1&autoplay=1`;
-
-    iframe.onerror = function () {
-        console.error('Error loading the episode content in the iframe.');
-        alert('Failed to load the episode. Try a different server.');
-    };
-
-    // 👉 Add this block here:
-    localStorage.setItem('lastPlayedSeason', seasonNumber);
-    localStorage.setItem('lastPlayedEpisode', episodeNumber);
-
-    const nextBtn = document.getElementById('next-episode-btn');
-    nextBtn.style.display = 'block';
-
-    nextBtn.onclick = () => {
-        let nextEpisode = episodeNumber + 1;
-        playEpisode(nextEpisode, seasonNumber);
-    };
-};
-
-        // Event listeners for the buttons
-        const seasonBtn = document.getElementById('season-btn');
-        seasonBtn.addEventListener('click', () => toggleDropdown('seasons-list'));
-
-        const episodeBtn = document.getElementById('episode-btn');
-        episodeBtn.addEventListener('click', () => toggleDropdown('episodes-list'));
-
-        // Close iframe container (to hide video player)
-        const closeIframeBtn = document.getElementById('close-iframe-btn');
-        closeIframeBtn.addEventListener('click', () => {
-            const iframeContainer = document.getElementById('iframe-container');
-            iframeContainer.style.display = 'none'; // Hide iframe container when close button is clicked
-            const iframe = document.getElementById('movie-iframe');
-            iframe.src = ''; // Reset iframe source to stop playback
-        });
-
-// Change server dropdown logic
-const changeServerBtn = document.getElementById('change-server-btn');
-const serverDropdown = document.getElementById('server-dropdown');
-const serverList = document.getElementById('server-list');
-
-// Toggle dropdown when clicking Change Server
-changeServerBtn.addEventListener('click', () => {
-    serverDropdown.style.display = serverDropdown.style.display === 'block' ? 'none' : 'block';
-
-    // Clear previous list
-    serverList.innerHTML = '';
-
-    // Add servers to dropdown list with custom names
-    SERIES_ENDPOINTS.forEach((server, index) => {
-        const serverItem = document.createElement('li');
-        serverItem.textContent = server.name; // Use custom name here
-        serverItem.addEventListener('click', () => {
-            currentServerIndex = index; // Set the selected server index
-            serverDropdown.style.display = 'none'; // Close dropdown after selecting a server
-            
-            const iframe = document.getElementById('movie-iframe');
-            
-            // Check if the selected server is 'Mythic' and add the 'autoplay' and 'autonext' parameters
-            if (server.name === 'Mythic(Fast, Auto Next, Auto Play)') {
-                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}?autonext=1&autoplay=1`; // Add autoplay and autonext
-            }
-            // Check if the selected server is 'Warrior' and add custom parameters
-            else if (server.name === 'Warrior(Auto Play)') {
-                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=default&title=true&poster=true&autoplay=true&nextbutton=true`; // Add custom Warrior parameters
-            }
-            else {
-                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}`; // Load episode from the selected server without extra params
-            }
-        });
-        serverList.appendChild(serverItem);
-    });
-});
-        
     } catch (error) {
         console.error('Error fetching TV show details:', error);
     }
 };
+
 
 const fetchMoreLikeThis = async (tvShowId) => {
     try {
@@ -572,6 +468,7 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
 
 
 
