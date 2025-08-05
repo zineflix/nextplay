@@ -576,42 +576,30 @@ function toggleFullscreen() {
 }
 // Fullscreen Button Movie End //
 
-const fetchCast = async () => {
-  try {
-    const url = `${baseUrl}/tv/${tvShowId}/credits?api_key=${apiKey}&language=en-US`;
-    const response = await fetch(url);
-    const data = await response.json();
 
-    const castContainer = document.getElementById('show-cast');
-    castContainer.innerHTML = ''; // Clear existing cast
+  // Fetch and display cast
+  const castUrl = `${baseUrl}/tv/${tvId}/credits?api_key=${apiKey}&language=en-US`;
+  const castResponse = await fetch(castUrl);
+  const castData = await castResponse.json();
 
-    const maxCastToShow = 10; // Limit the number of cast members
+  const castContainer = document.getElementById('movie-cast');
+  castContainer.innerHTML = '';
 
-    data.cast.slice(0, maxCastToShow).forEach(actor => {
-      const castCard = document.createElement('div');
-      castCard.classList.add('cast-card');
+  castData.cast.slice(0, 6).forEach(actor => {
+    const member = document.createElement('div');
+    member.classList.add('cast-member');
 
-      const img = document.createElement('img');
-      img.src = actor.profile_path
-        ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
-        : 'https://via.placeholder.com/150x225?text=No+Image';
+    const img = document.createElement('img');
+    img.src = actor.profile_path
+      ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+      : 'https://via.placeholder.com/100x150?text=No+Image';
+    member.appendChild(img);
 
-      const name = document.createElement('p');
-      name.classList.add('actor-name');
-      name.textContent = actor.name;
+    const name = document.createElement('p');
+    name.textContent = actor.name;
+    name.style.color = 'white';
+    member.appendChild(name);
 
-      const character = document.createElement('p');
-      character.classList.add('character-name');
-      character.textContent = `as ${actor.character}`;
-
-      castCard.appendChild(img);
-      castCard.appendChild(name);
-      castCard.appendChild(character);
-
-      castContainer.appendChild(castCard);
-    });
-  } catch (error) {
-    console.error('Error fetching cast:', error);
-  }
-};
+    castContainer.appendChild(member);
+  });
 
