@@ -273,15 +273,18 @@ const fetchTVShowDetails = async () => {
             genreContainer.appendChild(span);
         });
 
-        // 🔽 Fetch trailer
-        const videoRes = await fetch(`${baseUrl}/tv/${tvShowId}/videos?api_key=${apiKey}&language=en-US`);
-        const videoData = await videoRes.json();
-        const trailer = videoData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-        if (trailer) {
-            const trailerIframe = document.getElementById('movie-iframe-trailer');
-            trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
-            document.getElementById('movie-trailer-container').style.display = 'block';
-        }
+// Fetch trailer (YouTube)
+const videoUrl = `${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}&language=en-US`;
+const videoResponse = await fetch(videoUrl);
+const videoData = await videoResponse.json();
+
+const trailer = videoData.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+if (trailer) {
+  const trailerIframe = document.getElementById('movie-iframe-trailer');
+  trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+  document.getElementById('movie-trailer-container').style.display = 'block';
+}
+
 
         // 🔽 Fetch and display cast
         const castRes = await fetch(`${baseUrl}/tv/${tvShowId}/credits?api_key=${apiKey}&language=en-US`);
@@ -468,6 +471,7 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
 
 
 
