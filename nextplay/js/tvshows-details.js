@@ -8,7 +8,7 @@ window.addEventListener("scroll", function () {
     }
 });
 
-const apiKey = 'a1e72fd93ed59f56e6332813b9f8dcae'; // Your TMDB API Key
+const apiKey = 'cd70bcb6c58d1e7c3a5324eafa6de36a'; // Your TMDB API Key
 const baseUrl = 'https://api.themoviedb.org/3';
 
 // Function to fetch TV shows based on category
@@ -29,16 +29,16 @@ const fetchTVShows = async (category, rowId) => {
                 url = `${baseUrl}/tv/top_rated?api_key=${apiKey}&language=en-US&page=1`;
                 break;   
             case 'drama':
-                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=6&vote_count.gte=0&with_genres=18&page=1`; // Genre ID 18 is Drama
+                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=6&vote_count.gte=0&with_genres=18&page=1`;
                 break;
             case 'comedy':
-                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=5&vote_count.gte=3000&with_genres=35&page=1`; // Genre ID 35 is Comedy
+                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=5&vote_count.gte=3000&with_genres=35&page=1`;
                 break;
             case 'romance':
-                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=5&vote_count.gte=10&with_genres=10749&page=1`; // Genre ID 10749 is Romance
+                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=5&vote_count.gte=10&with_genres=10749&page=1`;
                 break;
             case 'crime':
-                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=8&vote_count.gte=3000&with_genres=80`; // Genre ID 80 is Crime
+                url = `${baseUrl}/discover/tv?api_key=${apiKey}&include_adult=true&include_null_first_air_dates=false&language=en-US&page=1&sort_by=popularity.desc&vote_average.gte=8&vote_count.gte=3000&with_genres=80`;
                 break;     
             default:
                 console.log('Unknown category');
@@ -47,45 +47,40 @@ const fetchTVShows = async (category, rowId) => {
 
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data);  // Log data for debugging
+        console.log(data);
 
         const tvShowCards = document.getElementById(rowId);
-        tvShowCards.innerHTML = ''; // Clear existing posters
+        tvShowCards.innerHTML = '';
 
         if (data.results && data.results.length > 0) {
             data.results.forEach(tvShow => {
-    const tvShowCard = document.createElement('div');
-    tvShowCard.classList.add('tv-show-card');
-    tvShowCard.style.position = 'relative';
+                const tvShowCard = document.createElement('div');
+                tvShowCard.classList.add('tv-show-card');
+                tvShowCard.style.position = 'relative';
 
-    // Create the play button
-    const playButton = document.createElement('div');
-    playButton.classList.add('play-button');
-    playButton.innerHTML = '<i class="fas fa-play"></i>';
-                
-    // Tv Show poster
-    const tvShowPoster = document.createElement('img');
-    tvShowPoster.classList.add('row__poster');
-    tvShowPoster.src = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
-    tvShowPoster.alt = tvShow.name;
+                const playButton = document.createElement('div');
+                playButton.classList.add('play-button');
+                playButton.innerHTML = '<i class="fas fa-play"></i>';
+                        
+                const tvShowPoster = document.createElement('img');
+                tvShowPoster.classList.add('row__poster');
+                tvShowPoster.src = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
+                tvShowPoster.alt = tvShow.name;
 
-    // Star Rating
-    const rating = document.createElement('div');
-    rating.classList.add('tv-show-rating');
-    rating.innerHTML = `<i class="fas fa-star"></i> ${tvShow.vote_average.toFixed(1)}`; // Star icon with rating
+                const rating = document.createElement('div');
+                rating.classList.add('tv-show-rating');
+                rating.innerHTML = `<i class="fas fa-star"></i> ${tvShow.vote_average.toFixed(1)}`;
 
-    // Append elements to the Tv Show card
-    tvShowCard.appendChild(tvShowPoster);
-    tvShowCard.appendChild(rating);
-    tvShowCard.appendChild(playButton);            
+                tvShowCard.appendChild(tvShowPoster);
+                tvShowCard.appendChild(rating);
+                tvShowCard.appendChild(playButton);            
 
-    // Click event to navigate to details page
-    tvShowCard.addEventListener('click', () => {
-        window.location.href = `tvshows-details.html?id=${tvShow.id}`;
-    });
+                tvShowCard.addEventListener('click', () => {
+                    window.location.href = `tvshows-details.html?id=${tvShow.id}`;
+                });
 
-    tvShowCards.appendChild(tvShowCard);
-});
+                tvShowCards.appendChild(tvShowCard);
+            });
         } else {
             console.log(`No results for category: ${category}`);
         }
@@ -96,126 +91,91 @@ const fetchTVShows = async (category, rowId) => {
 
 const fetchBanner = async () => {
     try {
-        // Fetch trending TV shows from the API
         const url = `${baseUrl}/trending/tv/week?api_key=${apiKey}&language=en-US`;
         const response = await fetch(url);
         const data = await response.json();
 
-        // Get a random TV show from the list of trending TV shows
         const tvShow = data.results[Math.floor(Math.random() * data.results.length)];
-
-        
         const banner = document.querySelector('.banner');
-       
 
-        // ----------------------
-        // Update Banner with TV Show Data
-        // ----------------------
-
-        // Set the banner title to the selected TV show's name
         const bannerTitle = document.querySelector('.banner__title');
         bannerTitle.textContent = tvShow.name;
 
-        // Shorten the description (limit to 150 characters for brevity)
         const bannerDescription = document.querySelector('.banner__description');
         bannerDescription.textContent = tvShow.overview.length > 150 ? tvShow.overview.substring(0, 150) + '...' : tvShow.overview;
 
-        // Set the background image for the banner using the TV show's backdrop
         banner.style.backgroundImage = `url(https://image.tmdb.org/t/p/original${tvShow.backdrop_path})`;
 
-        // ----------------------
-        // Play Button Functionality
-        // ----------------------
-
-        // Add event listener to the Play button to navigate to TV show details
-        playButton.addEventListener('click', () => {
-            window.location.href = `tvshows-details.html?id=${tvShow.id}`;
-        });
+        // Make sure playButton exists before adding event
+        const playButton = document.querySelector('.banner .play-button');
+        if (playButton) {
+            playButton.addEventListener('click', () => {
+                window.location.href = `tvshows-details.html?id=${tvShow.id}`;
+            });
+        }
 
     } catch (error) {
         console.error('Error fetching banner data:', error);
     }
 };
 
-// Load a random TV show for the banner when the page loads
-window.onload = fetchBanner;
-
 const initArrowNavigation = () => {
-    // Find all rows of posters (e.g., popularTVShows, topRatedTVShows, etc.)
     const allRows = document.querySelectorAll('.row__posters');
 
-    // Loop over each row and add the scroll functionality
     allRows.forEach(rowPosters => {
         const prevButton = rowPosters.parentElement.querySelector('.arrow-button.prev');
         const nextButton = rowPosters.parentElement.querySelector('.arrow-button.next');
         let scrollAmount = 0;
-        const scrollStep = 220; // Adjust scroll step to your preference
+        const scrollStep = 220;
 
-        // Check if both buttons exist
         if (prevButton && nextButton) {
-            // Scroll left (previous)
             prevButton.addEventListener('click', () => {
-                // Ensure we don't scroll past the start
                 if (scrollAmount > 0) {
                     scrollAmount -= scrollStep;
-                    rowPosters.scrollTo({
-                        left: scrollAmount,
-                        behavior: 'smooth'
-                    });
+                    rowPosters.scrollTo({ left: scrollAmount, behavior: 'smooth' });
                 }
             });
 
-            // Scroll right (next)
             nextButton.addEventListener('click', () => {
-                // Ensure we don't scroll past the end
                 const maxScroll = rowPosters.scrollWidth - rowPosters.clientWidth;
                 if (scrollAmount < maxScroll) {
                     scrollAmount += scrollStep;
-                    rowPosters.scrollTo({
-                        left: scrollAmount,
-                        behavior: 'smooth'
-                    });
+                    rowPosters.scrollTo({ left: scrollAmount, behavior: 'smooth' });
                 }
             });
         }
     });
 };
 
-// Toggle the search bar visibility when clicking the search icon
 function toggleSearchBar() {
     const searchBar = document.querySelector('.search-bar');
     searchBar.classList.toggle('show');
 }
 
-// Close the search bar if clicked outside
 document.addEventListener('click', function(event) {
     const searchBar = document.querySelector('.search-bar');
-    const searchIcon = document.querySelector('.icon i.fa-search');
     const iconsContainer = document.querySelector('.icons-container');
-
-    // Check if the click was outside the search bar or any of the icons
     if (!searchBar.contains(event.target) && !iconsContainer.contains(event.target)) {
         searchBar.classList.remove('show');
     }
 });
 
 function openSearchPage() {
-    // Magbukas ug new page
-    window.location.href = 'search.html';  // I-replace ang 'search.html' sa URL sa imong gustong page
+    window.location.href = 'search.html';
 }
 
 const SERIES_ENDPOINTS = [
     { url: 'https://vidsrc.cc/v2/embed/tv/', name: 'Server 1' },
     { url: 'https://player.videasy.net/tv/', name: 'Server 2' },
-    { url: 'https://embed.rgshows.me/api/1/tv/?id=', name: 'Server 3' },
-    { url: 'https://vidsrc.cc/v3/embed/tv/', name: 'Server 4' },
-    { url: 'https://embed.rgshows.me/api/3/tv/?id=', name: 'Server 5' },
-    { url: 'https://rivestream.org/embed?type=tv&id=', name: 'Server 6' },
-    { url: 'https://vidsrc.rip/embed/tv/', name: 'Server 7' },
-    { url: 'https://apimocine.vercel.app/tv/', name: 'Server 8' },
-    { url: 'https://vidfast.pro/tv/', name: 'Server 9' },
-    { url: 'https://vidsrc.su/embed/tv/', name: 'Server 10' },
-    { url: 'https://111movies.com/tv/', name: 'Server 11' },
+    { url: 'https://vidfast.pro/tv/', name: 'Server 3' },
+    { url: 'https://vidsrc.su/embed/tv/', name: 'Server 4' },
+    { url: 'https://111movies.com/tv/', name: 'Server 5' },
+    { url: 'https://embed.rgshows.me/api/1/tv/?id=', name: 'Server 6' },
+    { url: 'https://vidsrc.cc/v3/embed/tv/', name: 'Server 7' },
+    { url: 'https://embed.rgshows.me/api/3/tv/?id=', name: 'Server 8' },
+    { url: 'https://rivestream.org/embed?type=tv&id=', name: 'Server 9' },
+    { url: 'https://vidsrc.rip/embed/tv/', name: 'Server 10' },
+    { url: 'https://apimocine.vercel.app/tv/', name: 'Server 11' },
 ];
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -224,9 +184,8 @@ let currentServerIndex = 0;
 let selectedSeason = null;
 let selectedEpisode = null;
 
-// Fetch comments when the page loads
 window.onload = function () {
-  getComments(); // Fetch comments when the page loads
+  getComments();
 };
 
 console.log('TV Show ID:', tvShowId);
@@ -235,269 +194,135 @@ const fetchTVShowDetails = async () => {
     try {
         const url = `${baseUrl}/tv/${tvShowId}?api_key=${apiKey}&language=en-US`;
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const tvShow = await response.json();
 
-        // Populate poster and details
-        const posterUrl = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
-        document.getElementById('tv-show-poster').src = posterUrl;
-
-        const backdropUrl = tvShow.backdrop_path ? `https://image.tmdb.org/t/p/original${tvShow.backdrop_path}` : 'https://via.placeholder.com/1500x800?text=No+Backdrop+Available';
+        document.getElementById('tv-show-poster').src = `https://image.tmdb.org/t/p/w500${tvShow.poster_path}`;
         document.querySelector('.blurred-background').style.backgroundImage = `none`;
-
         document.getElementById('tv-show-description').textContent = tvShow.overview;
 
-        // Tv Show Rating (star rating)
-        const tvShowRating = tvShow.vote_average; // Rating from 1 to 10
         const starContainer = document.getElementById('tv-show-rating');
-        starContainer.innerHTML = ''; // Clear existing stars
-
-        const filledStars = Math.round(tvShowRating / 2); // Convert 10-point rating to 5-point scale
+        starContainer.innerHTML = '';
+        const filledStars = Math.round(tvShow.vote_average / 2);
         const emptyStars = 5 - filledStars;
-
-        // Add filled stars
         for (let i = 0; i < filledStars; i++) {
             const star = document.createElement('span');
             star.classList.add('star', 'filled');
             starContainer.appendChild(star);
         }
-
-        // Add empty stars
         for (let i = 0; i < emptyStars; i++) {
             const star = document.createElement('span');
             star.classList.add('star', 'empty');
             starContainer.appendChild(star);
         }
 
-        const tvShowFirstAirDate = "2025-01-25"; // Example air date
-
-        // Set the air date in the element
-        document.getElementById('air-date-text').textContent = `: ${tvShowFirstAirDate}`;
+        document.getElementById('air-date-text').textContent = `: ${tvShow.first_air_date}`;
 
         const genreContainer = document.getElementById('tv-show-genres');
         genreContainer.innerHTML = '';
         tvShow.genres.forEach(genre => {
-            const genreElement = document.createElement('span');
-            genreElement.classList.add('genre');
-            genreElement.textContent = genre.name;
-            genreContainer.appendChild(genreElement);
+            const span = document.createElement('span');
+            span.classList.add('genre');
+            span.textContent = genre.name;
+            genreContainer.appendChild(span);
         });
 
-        // Fetch Seasons
+        const videoRes = await fetch(`${baseUrl}/tv/${tvShowId}/videos?api_key=${apiKey}&language=en-US`);
+        const videoData = await videoRes.json();
+        const trailer = videoData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+        if (trailer) {
+            const trailerIframe = document.getElementById('movie-iframe-trailer');
+            trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+            document.getElementById('movie-trailer-container').style.display = 'block';
+        }
+
+        const castRes = await fetch(`${baseUrl}/tv/${tvShowId}/credits?api_key=${apiKey}&language=en-US`);
+        const castData = await castRes.json();
+        const castContainer = document.getElementById('movie-cast');
+        castContainer.innerHTML = '';
+        castData.cast.slice(0, 6).forEach(actor => {
+            const member = document.createElement('div');
+            member.classList.add('cast-member');
+
+            const img = document.createElement('img');
+            img.src = actor.profile_path
+                ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                : 'https://via.placeholder.com/100x150?text=No+Image';
+            member.appendChild(img);
+
+            const name = document.createElement('p');
+            name.textContent = actor.name;
+            name.style.color = 'white';
+            member.appendChild(name);
+
+            castContainer.appendChild(member);
+        });
+
         const seasonsContainer = document.getElementById('seasons-list');
-        seasonsContainer.innerHTML = ''; // Reset seasons container
+        seasonsContainer.innerHTML = '';
         tvShow.seasons.forEach(season => {
-            const seasonItem = document.createElement('li');
-            const seasonImageUrl = season.poster_path
+            const li = document.createElement('li');
+            const img = document.createElement('img');
+            img.src = season.poster_path
                 ? `https://image.tmdb.org/t/p/w200${season.poster_path}`
-                : 'https://via.placeholder.com/100x150?text=No+Image'; // Fallback image if no poster
-
-            const seasonImage = document.createElement('img');
-            seasonImage.src = seasonImageUrl;
-            seasonImage.alt = `Season ${season.season_number}`;
-            seasonImage.style.width = '50px';  // Adjust the size of the image
-            seasonImage.style.marginRight = '10px'; // Space between the image and the text
-
-            seasonItem.appendChild(seasonImage); // Add the image to the season list item
-            seasonItem.appendChild(document.createTextNode(`Season ${season.season_number}`));
-
-            seasonItem.addEventListener('click', () => {
-                selectedSeason = season.season_number; // Track the selected season
-                loadEpisodes(selectedSeason); // Load episodes for that season
-                toggleDropdown('seasons-list'); // Close season dropdown
-                document.getElementById('episode-btn').style.display = 'block'; // Show episode button
+                : 'https://via.placeholder.com/100x150?text=No+Image';
+            img.alt = `Season ${season.season_number}`;
+            img.style.width = '50px';
+            img.style.marginRight = '10px';
+            li.appendChild(img);
+            li.appendChild(document.createTextNode(`Season ${season.season_number}`));
+            li.addEventListener('click', () => {
+                selectedSeason = season.season_number;
+                loadEpisodes(selectedSeason);
+                toggleDropdown('seasons-list');
+                document.getElementById('episode-btn').style.display = 'block';
             });
-
-            seasonsContainer.appendChild(seasonItem);
+            seasonsContainer.appendChild(li);
         });
-
-        
-
-        // Toggle Dropdown visibility
-        const toggleDropdown = (dropdownId) => {
-            const dropdown = document.getElementById(dropdownId);
-            dropdown.classList.toggle('show');
-        };
-
-        // Load Episodes for the selected season
-        const loadEpisodes = async (seasonNumber) => {
-            const episodesUrl = `${baseUrl}/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`;
-            const episodesResponse = await fetch(episodesUrl);
-            const episodesData = await episodesResponse.json();
-
-            const episodesContainer = document.getElementById('episodes-list');
-            episodesContainer.innerHTML = ''; // Clear previous episodes
-
-            episodesData.episodes.forEach(episode => {
-                const episodeItem = document.createElement('li');
-                const episodeImage = document.createElement('img');
-                const episodeImageUrl = episode.still_path
-                    ? `https://image.tmdb.org/t/p/w200${episode.still_path}`
-                    : 'https://via.placeholder.com/100x150?text=No+Image'; // Fallback image if no still path
-
-                episodeImage.src = episodeImageUrl;
-                episodeImage.alt = `Episode ${episode.episode_number}`;
-                episodeImage.style.width = '50px'; // Adjust the size of the image
-                episodeImage.style.marginRight = '10px'; // Space between the image and the text
-
-                episodeItem.appendChild(episodeImage); // Add the image to the episode list item
-                episodeItem.appendChild(document.createTextNode(`Episode ${episode.episode_number}: ${episode.name}`));
-
-                episodeItem.addEventListener('click', () => {
-                    selectedEpisode = episode.episode_number;
-                    playEpisode(selectedEpisode, selectedSeason);
-                });
-
-                episodesContainer.appendChild(episodeItem);
-            });
-        };
-
-        // Play selected episode
-    const playEpisode = (episodeNumber, seasonNumber) => {
-    const selectedServerUrl = SERIES_ENDPOINTS[currentServerIndex].url;
-    console.log(`Trying to load from: ${selectedServerUrl}?autonext=1`);
-
-    const iframeContainer = document.getElementById('iframe-container');
-    iframeContainer.style.display = 'flex';
-
-    const iframe = document.getElementById('movie-iframe');
-    iframe.src = `${selectedServerUrl}${tvShowId}/${seasonNumber}/${episodeNumber}?autonext=1&autoplay=1`;
-
-    iframe.onerror = function () {
-        console.error('Error loading the episode content in the iframe.');
-        alert('Failed to load the episode. Try a different server.');
-    };
-
-    // 👉 Add this block here:
-    localStorage.setItem('lastPlayedSeason', seasonNumber);
-    localStorage.setItem('lastPlayedEpisode', episodeNumber);
-
-    const nextBtn = document.getElementById('next-episode-btn');
-    nextBtn.style.display = 'block';
-
-    nextBtn.onclick = () => {
-        let nextEpisode = episodeNumber + 1;
-        playEpisode(nextEpisode, seasonNumber);
-    };
-};
-
-        // Event listeners for the buttons
-        const seasonBtn = document.getElementById('season-btn');
-        seasonBtn.addEventListener('click', () => toggleDropdown('seasons-list'));
-
-        const episodeBtn = document.getElementById('episode-btn');
-        episodeBtn.addEventListener('click', () => toggleDropdown('episodes-list'));
-
-        // Close iframe container (to hide video player)
-        const closeIframeBtn = document.getElementById('close-iframe-btn');
-        closeIframeBtn.addEventListener('click', () => {
-            const iframeContainer = document.getElementById('iframe-container');
-            iframeContainer.style.display = 'none'; // Hide iframe container when close button is clicked
-            const iframe = document.getElementById('movie-iframe');
-            iframe.src = ''; // Reset iframe source to stop playback
-        });
-
-// Change server dropdown logic
-const changeServerBtn = document.getElementById('change-server-btn');
-const serverDropdown = document.getElementById('server-dropdown');
-const serverList = document.getElementById('server-list');
-
-// Toggle dropdown when clicking Change Server
-changeServerBtn.addEventListener('click', () => {
-    serverDropdown.style.display = serverDropdown.style.display === 'block' ? 'none' : 'block';
-
-    // Clear previous list
-    serverList.innerHTML = '';
-
-    // Add servers to dropdown list with custom names
-    SERIES_ENDPOINTS.forEach((server, index) => {
-        const serverItem = document.createElement('li');
-        serverItem.textContent = server.name; // Use custom name here
-        serverItem.addEventListener('click', () => {
-            currentServerIndex = index; // Set the selected server index
-            serverDropdown.style.display = 'none'; // Close dropdown after selecting a server
-            
-            const iframe = document.getElementById('movie-iframe');
-            
-            // Check if the selected server is 'Mythic' and add the 'autoplay' and 'autonext' parameters
-            if (server.name === 'Mythic(Fast, Auto Next, Auto Play)') {
-                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}?autonext=1&autoplay=1`; // Add autoplay and autonext
-            }
-            // Check if the selected server is 'Warrior' and add custom parameters
-            else if (server.name === 'Warrior(Auto Play)') {
-                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}?primaryColor=ffffff&secondaryColor=a2a2a2&iconColor=eefdec&icons=vid&player=default&title=true&poster=true&autoplay=true&nextbutton=true`; // Add custom Warrior parameters
-            }
-            else {
-                iframe.src = `${server.url}${tvShowId}/${selectedSeason}/${selectedEpisode}`; // Load episode from the selected server without extra params
-            }
-        });
-        serverList.appendChild(serverItem);
-    });
-});
 
     } catch (error) {
         console.error('Error fetching TV show details:', error);
     }
 };
 
-const fetchMoreLikeThis = async (tvShowId) => {
+// ✅ Added missing functions
+const loadEpisodes = async (seasonNumber) => {
     try {
-        const url = `${baseUrl}/tv/${tvShowId}/similar?api_key=${apiKey}&language=en-US`;
+        const url = `${baseUrl}/tv/${tvShowId}/season/${seasonNumber}?api_key=${apiKey}&language=en-US`;
         const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const seasonData = await response.json();
 
-        const similarShowsContainer = document.getElementById('similar-shows-container');
-        similarShowsContainer.innerHTML = ''; // Clear previous similar shows
-
-        // Filter out shows with no poster image
-        const validShows = data.results.filter(show => show.poster_path);
-
-        // If no valid shows, show a message
-        if (validShows.length === 0) {
-            similarShowsContainer.innerHTML = '<p>No similar TV shows available.</p>';
-            return;
-        }
-
-        // Loop through the valid TV shows and create grid items
-        validShows.forEach(show => {
-            const showItem = document.createElement('div');
-            showItem.classList.add('similar-show'); // Add the grid item class
-
-            // Movie Poster Image
-            const showImageUrl = `https://image.tmdb.org/t/p/original${show.poster_path}`;
-            const showImage = document.createElement('img');
-            showImage.src = showImageUrl;
-            showImage.alt = show.name || 'No Title';  // Default alt text if no name
-            showImage.classList.add('similar-show-img'); // Add the image class
-
-            showItem.appendChild(showImage); // Append the image
-
-            // TV Show Title
-            const showTitle = document.createElement('span');
-            showTitle.textContent = show.name || 'Untitled TV Show'; // Fallback for title if missing
-            showTitle.classList.add('show-title'); // Optional class for styling titles
-
-
-            // Add click event to redirect to the selected show page
-            showItem.addEventListener('click', () => {
-                window.location.href = `?id=${show.id}`; // Redirect to the selected TV show
+        const episodesContainer = document.getElementById('episodes-list');
+        episodesContainer.innerHTML = '';
+        seasonData.episodes.forEach(episode => {
+            const li = document.createElement('li');
+            li.textContent = `Episode ${episode.episode_number}: ${episode.name}`;
+            li.addEventListener('click', () => {
+                selectedEpisode = episode.episode_number;
+                playEpisode(selectedSeason, selectedEpisode);
+                toggleDropdown('episodes-list');
             });
-
-            similarShowsContainer.appendChild(showItem); // Append to the container
+            episodesContainer.appendChild(li);
         });
     } catch (error) {
-        console.error('Error fetching similar TV shows:', error);
+        console.error('Error fetching episodes:', error);
     }
 };
 
-fetchTVShowDetails();
+function toggleDropdown(listId) {
+    const list = document.getElementById(listId);
+    list.classList.toggle('show');
+}
 
-// Fetch data for different TV show categories
+function playEpisode(seasonNumber, episodeNumber) {
+    const iframe = document.getElementById('movie-iframe');
+    const server = SERIES_ENDPOINTS[currentServerIndex].url;
+    iframe.src = `${server}${tvShowId}?season=${seasonNumber}&episode=${episodeNumber}`;
+}
+
+// Rest of your calls
+fetchTVShowDetails();
 fetchTVShows('popular', 'popularTVShows');
 fetchTVShows('trending', 'trendingTVShows');
 fetchTVShows('top_rated', 'topRatedTVShows');
@@ -506,69 +331,43 @@ fetchTVShows('drama', 'dramaTVShows');
 fetchTVShows('comedy', 'comedyTVShows');
 fetchTVShows('romance', 'romanceTVShows');
 fetchTVShows('crime', 'crimeTVShows');
-
-// Fetch banner details for TV Shows
 fetchBanner();
-
-// Initialize arrow buttons functionality after fetching the TV show data
 document.addEventListener('DOMContentLoaded', initArrowNavigation);
 
-// Close Button Logic: Redirect to tvshows-details.html
 const closeButton = document.getElementById('close-button');
-
 closeButton.addEventListener('click', () => {
-    window.location.href = 'tv-show.html'; // Redirects to the tvshows-details page
+    window.location.href = 'index.html';
 });
 
 window.addEventListener("load", function() {
     setTimeout(function() {
         document.getElementById("loading-screen").style.display = "none";
-    }, 1000); // 3000ms = 3 seconds
+    }, 1000);
 });
 
-
-// For sticky header when scrolling
-    window.addEventListener("scroll", function () {
-      let nav = document.querySelector("nav");
-      if (window.scrollY > 50) {
-        nav.classList.add("nav-solid"); // Add solid background when scrolled
-      } else {
-        nav.classList.remove("nav-solid"); // Remove solid background at top
-      }
-    });
-
-    // Toggle menu visibility when menu button is clicked
 document.getElementById("menu-btn").addEventListener("click", function() {
     document.getElementById("menu").classList.toggle("active");
 });
 
-
-
-// For Floating Message Close Function Start
 function closeMessage() {
-        document.getElementById("floating-message").style.display = "none";
-    }
+    document.getElementById("floating-message").style.display = "none";
+}
 function redirectToV2() {
     window.location.href = "https://netplex-v2.pages.dev";
 }
-// For Floating Message Close Function End
 
-
-// Fullscreen Button Movie Start //
 function toggleFullscreen() {
-  const iframe = document.querySelector('iframe');
-  if (iframe.requestFullscreen) {
-    iframe.requestFullscreen();
-  } else if (iframe.mozRequestFullScreen) {
-    iframe.mozRequestFullScreen();
-  } else if (iframe.webkitRequestFullscreen) {
-    iframe.webkitRequestFullscreen();
-  } else if (iframe.msRequestFullscreen) {
-    iframe.msRequestFullscreen();
-  }
-  // Rotate the screen to landscape mode (Only works on mobile browsers)
+    const iframe = document.querySelector('iframe');
+    if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+    } else if (iframe.mozRequestFullScreen) {
+        iframe.mozRequestFullScreen();
+    } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+    }
     if (screen.orientation && screen.orientation.lock) {
         screen.orientation.lock("landscape").catch(error => console.log("Orientation lock failed:", error));
     }  
 }
-// Fullscreen Button Movie End //
