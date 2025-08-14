@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', initArrowNavigation);
 
 // JavaScript for the Close Button
 document.getElementById('close-button').addEventListener('click', () => {
-    window.location.href = 'movies.html';  // Redirects to the main page (index.html)
+    window.location.href = 'index.html';  // Redirects to the main page (index.html)
 });
 
 window.addEventListener("load", function() {
