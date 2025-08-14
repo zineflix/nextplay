@@ -319,7 +319,7 @@ const fetchTVShowDetails = async () => {
             castContainer.appendChild(member);
         });
         
-        // Fetch Seasons
+        // 🔽 Fetch Seasons
         const seasonsContainer = document.getElementById('seasons-list');
         seasonsContainer.innerHTML = ''; // Reset seasons container
         tvShow.seasons.forEach(season => {
@@ -606,4 +606,5 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
 
