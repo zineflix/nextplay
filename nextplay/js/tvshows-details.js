@@ -285,6 +285,40 @@ const fetchTVShowDetails = async () => {
             genreContainer.appendChild(genreElement);
         });
 
+        // 🔽 Fetch trailer
+        const videoRes = await fetch(`${baseUrl}/tv/${tvShowId}/videos?api_key=${apiKey}&language=en-US`);
+        const videoData = await videoRes.json();
+        const trailer = videoData.results.find(v => v.type === "Trailer" && v.site === "YouTube");
+        if (trailer) {
+            const trailerIframe = document.getElementById('movie-iframe-trailer');
+            trailerIframe.src = `https://www.youtube.com/embed/${trailer.key}`;
+            document.getElementById('movie-trailer-container').style.display = 'block';
+        }
+
+
+        // 🔽 Fetch and display cast
+        const castRes = await fetch(`${baseUrl}/tv/${tvShowId}/credits?api_key=${apiKey}&language=en-US`);
+        const castData = await castRes.json();
+        const castContainer = document.getElementById('movie-cast');
+        castContainer.innerHTML = '';
+        castData.cast.slice(0, 6).forEach(actor => {
+            const member = document.createElement('div');
+            member.classList.add('cast-member');
+
+            const img = document.createElement('img');
+            img.src = actor.profile_path
+                ? `https://image.tmdb.org/t/p/w185${actor.profile_path}`
+                : 'https://via.placeholder.com/100x150?text=No+Image';
+            member.appendChild(img);
+
+            const name = document.createElement('p');
+            name.textContent = actor.name;
+            name.style.color = 'white';
+            member.appendChild(name);
+
+            castContainer.appendChild(member);
+        });
+        
         // Fetch Seasons
         const seasonsContainer = document.getElementById('seasons-list');
         seasonsContainer.innerHTML = ''; // Reset seasons container
@@ -572,3 +606,4 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
