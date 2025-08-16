@@ -42,52 +42,41 @@ async function fetchBanner() {
 fetchBanner();
 
 // Fetch Media Rows
-const mediaState = {};
-
-async function fetchMedia(url, containerId, type, page = 1) {
+async function fetchMedia(url, containerId, type, pages = 3) {
     const container = document.getElementById(containerId);
 
-    const response = await fetch(`${url}&page=${page}`);
-    const data = await response.json();
+    for (let page = 1; page <= pages; page++) {
+        const response = await fetch(`${url}&page=${page}`);
+        const data = await response.json();
 
-    if (!mediaState[containerId]) {
-        mediaState[containerId] = { page: 1, loading: false };
-    }
+        data.results.forEach(item => {
+            const mediaItem = document.createElement("div");
+            mediaItem.classList.add("media-item");
 
-    data.results.forEach(item => {
-        const mediaItem = document.createElement("div");
-        mediaItem.classList.add("media-item");
+            const rating = item.vote_average.toFixed(1);
+            mediaItem.innerHTML = `
+                <div class="poster-title" title="${item.title || item.name}">
+                    ${item.title || item.name}
+                </div>
+                <div class="poster-card">
+                    <div class="rating">
+                        <span class="star"><i class="fas fa-star"></i></span> 
+                        <span class="rating-number">${rating}</span>
+                    </div>
+                    <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
+                    <div class="play-button"><i class="fas fa-play"></i></div>
+                </div>
+            `;
 
-        const year = (item.release_date || item.first_air_date || '').slice(0, 4) || '—';
-      
-        const rating = item.vote_average.toFixed(1);
-        mediaItem.innerHTML = `
-    <div class="poster-title" title="${item.title || item.name}">${item.title || item.name}</div>
-    <div class="poster-card">
-        <div class="rating">
-            <span class="star"><i class="fas fa-star"></i></span> <span class="rating-number">${rating}</span>
-        </div>
-        <div class="year-container">
-            <span class="year">${year}</span>
-        </div>
-        <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
-        <div class="play-button">
-            <i class="fas fa-play"></i>
-        </div>
-    </div>
-`;
+            mediaItem.addEventListener("click", () => {
+                window.location.href = type === "movie" 
+                    ? `movie-details.html?movie_id=${item.id}`
+                    : `tvshows-details.html?id=${item.id}`;
+            });
 
-
-        mediaItem.addEventListener("click", () => {
-            window.location.href = type === "movie" 
-                ? `movie-details.html?movie_id=${item.id}`
-                : `tvshows-details.html?id=${item.id}`;
+            container.appendChild(mediaItem);
         });
-
-        container.appendChild(mediaItem);
-    });
-
-    mediaState[containerId].loading = false;
+    }
 }
 
 
@@ -221,4 +210,3 @@ function updateStatsWidget() {
 
 // Update stats when the page loads
 window.onload = updateStatsWidget;
-
