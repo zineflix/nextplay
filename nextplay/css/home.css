@@ -788,3 +788,18 @@ background-color: #8A00C4; /* Darker green on hover */
   }
 }
 /* Telegram Widget End */
+
+.year-container {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 2;
+  background-color: #0275a6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  pointer-events: none;
+}
