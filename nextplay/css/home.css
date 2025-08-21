@@ -794,7 +794,7 @@ background-color: #8A00C4; /* Darker green on hover */
   bottom: 8px;
   left: 8px;
   z-index: 2;
-  background-color: #0275a6;
+  background-color: #8A00C4;
   color: #fff;
   font-size: 13px;
   font-weight: bold;
@@ -803,3 +803,4 @@ background-color: #8A00C4; /* Darker green on hover */
   box-shadow: 0 2px 4px rgba(0,0,0,0.4);
   pointer-events: none;
 }
+
