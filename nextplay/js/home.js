@@ -63,6 +63,9 @@ async function fetchMedia(url, containerId, type, pages = 3) {
                         <span class="star"><i class="fas fa-star"></i></span> 
                         <span class="rating-number">${rating}</span>
                     </div>
+                    <div class="year-container">
+                        <span class="year">${year}</span>
+                    </div>
                     <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
                     <div class="play-button"><i class="fas fa-play"></i></div>
                 </div>
@@ -260,5 +263,6 @@ function updateStatsWidget() {
 
 // Update stats when the page loads
 window.onload = updateStatsWidget;
+
 
 
