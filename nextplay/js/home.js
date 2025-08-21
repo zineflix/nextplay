@@ -127,7 +127,7 @@ async function fetchNewReleases(containerId, pages = 3) {
 }
 
 // Load New Releases
-fetchNewReleases("new-releases", 3);
+fetchNewReleases("new-releases", 5);
 // Poster for New Release this Year End // 
 
 // Load Data
@@ -260,4 +260,5 @@ function updateStatsWidget() {
 
 // Update stats when the page loads
 window.onload = updateStatsWidget;
+
 
