@@ -731,3 +731,35 @@ background-color: #8A00C4; /* Darker green on hover */
   background-color: #f40612;
 }
 /* Banner Play button End */
+
+/* Telegram Widget Start */
+#telegram-widget {
+  position: fixed;
+  bottom: 25px;   /* stays above banner bottom fade */
+  right: 20px;     /* <-- changed from left to right */
+  background: #8A00C4;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  z-index: 1100;   /* higher than banner but below nav */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: background 0.3s;
+}
+
+#telegram-widget a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#telegram-widget:hover {
+  background: #006fa1;
+}
+
+#telegram-widget a i {
+  font-size: 24px;   /* Bigger icon */
+}
+/* Telegram Widget End */
