@@ -54,19 +54,22 @@ async function fetchMedia(url, containerId, type, pages = 3) {
             mediaItem.classList.add("media-item");
 
             const rating = item.vote_average.toFixed(1);
+            const yearText = (item.release_date || item.first_air_date || "").slice(0,4) || "";
             mediaItem.innerHTML = `
-                <div class="poster-title" title="${item.title || item.name}">
-                    ${item.title || item.name}
+              <div class="poster-title" title="${item.title || item.name}">
+                ${item.title || item.name}
+              </div>
+              <div class="poster-card">
+                <div class="rating">
+                  <span class="star"><i class="fas fa-star"></i></span> 
+                  <span class="rating-number">${rating}</span>
                 </div>
-                <div class="poster-card">
-                    <div class="rating">
-                        <span class="star"><i class="fas fa-star"></i></span> 
-                        <span class="rating-number">${rating}</span>
-                    </div>
-                    <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
-                    <div class="play-button"><i class="fas fa-play"></i></div>
-                </div>
+                <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
+                <div class="play-button"><i class="fas fa-play"></i></div>
+                ${yearText ? `<div class="year-container">${yearText}</div>` : ""}
+              </div>
             `;
+
 
             mediaItem.addEventListener("click", () => {
                 window.location.href = type === "movie" 
@@ -101,19 +104,22 @@ async function fetchNewReleases(containerId, pages = 3) {
             mediaItem.classList.add("media-item");
 
             const rating = item.vote_average.toFixed(1);
+            const yearText = (item.release_date || item.first_air_date || "").slice(0,4) || "";
             mediaItem.innerHTML = `
-                <div class="poster-title" title="${item.title || item.name}">
-                    ${item.title || item.name}
+              <div class="poster-title" title="${item.title || item.name}">
+                ${item.title || item.name}
+              </div>
+              <div class="poster-card">
+                <div class="rating">
+                  <span class="star"><i class="fas fa-star"></i></span> 
+                  <span class="rating-number">${rating}</span>
                 </div>
-                <div class="poster-card">
-                    <div class="rating">
-                        <span class="star"><i class="fas fa-star"></i></span> 
-                        <span class="rating-number">${rating}</span>
-                    </div>
-                    <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
-                    <div class="play-button"><i class="fas fa-play"></i></div>
-                </div>
+                <img src="${imgURL + item.poster_path}" alt="${item.title || item.name}">
+                <div class="play-button"><i class="fas fa-play"></i></div>
+                ${yearText ? `<div class="year-container">${yearText}</div>` : ""}
+              </div>
             `;
+
 
             mediaItem.addEventListener("click", () => {
                 window.location.href = item.media_type === "movie" || item.title
@@ -260,6 +266,7 @@ function updateStatsWidget() {
 
 // Update stats when the page loads
 window.onload = updateStatsWidget;
+
 
 
 
