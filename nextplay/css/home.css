@@ -783,8 +783,7 @@ background-color: #8A00C4; /* Darker green on hover */
       display: none;    /* hide "Join Telegram" text */
     }
     #telegram-widget {
-      border-radius: 50%;   /* round button */
-      padding: 12px;
+      padding: 8px;
     }
   }
 }
