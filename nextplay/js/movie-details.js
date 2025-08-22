@@ -569,24 +569,22 @@ function toggleFullscreen() {
 ///////
 document.addEventListener("DOMContentLoaded", () => {
   const sandboxBtn = document.getElementById("toggleSandbox");
-  const sandboxStatus = document.getElementById("sandboxStatus");
 
-  if (sandboxBtn && sandboxStatus) {
+  if (sandboxBtn) {
     sandboxBtn.addEventListener("click", () => {
-      // Apply toggle to ALL iframes (movie, trailer, server iframes, etc.)
       document.querySelectorAll("iframe").forEach(iframe => {
         if (iframe.hasAttribute("sandbox")) {
-          iframe.removeAttribute("sandbox"); // Turn OFF
-          sandboxStatus.textContent = "Sandbox is OFF";
+          iframe.removeAttribute("sandbox'); // Turn OFF
+          sandboxBtn.textContent = "Sandbox: OFF";
         } else {
           iframe.setAttribute(
             "sandbox",
             "allow-scripts allow-presentation allow-same-origin"
-          ); // Turn ON
-          sandboxStatus.textContent = "Sandbox is ON";
+          );
+          sandboxBtn.textContent = "Sandbox: ON";
         }
 
-        // Reload iframe if it already has a source
+        // Reload iframe if it already has a src
         if (iframe.src) {
           const currentSrc = iframe.src;
           iframe.src = "";
@@ -596,4 +594,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 
