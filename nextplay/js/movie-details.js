@@ -568,21 +568,68 @@ function toggleFullscreen() {
 
 ///////
 
+<script>
   const iframe = document.getElementById("movie-iframe");
   const sandboxToggle = document.getElementById("sandbox-toggle");
-  const sandboxLabel = document.getElementById("sandbox-label");
+  const sandboxLabel  = document.getElementById("sandbox-label");
 
-  sandboxToggle.addEventListener("change", () => {
-    if (sandboxToggle.checked) {
-      // Enable sandbox
+  // Global state so any "change server" code can respect it
+  let isSandboxOn = true;
+
+  // Call this before loading/refreshing iframe
+  function applySandbox(enabled) {
+    isSandboxOn = enabled;
+    if (enabled) {
       iframe.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
       sandboxLabel.textContent = "Sandbox ON";
     } else {
-      // Disable sandbox
       iframe.removeAttribute("sandbox");
       sandboxLabel.textContent = "Sandbox OFF";
     }
+  }
+
+  // Force a navigation so the new sandbox mode actually takes effect
+  function reloadIframe() {
+    const current = iframe.src;
+    if (!current) return;
+    iframe.src = "about:blank";            // ensure a real navigation
+    setTimeout(() => { iframe.src = current; }, 0);
+  }
+
+  // Toggle handler
+  sandboxToggle.addEventListener("change", () => {
+    applySandbox(sandboxToggle.checked);
+    reloadIframe();                        // <-- important
   });
+
+  // If you have a function that loads/changes servers, use this pattern:
+  // (call this instead of setting iframe.src directly)
+  function loadServer(url) {
+    applySandbox(isSandboxOn);             // keep current mode
+    iframe.src = url;
+  }
+
+  // Example wiring for your "Change Server" UI:
+  // document.getElementById("server-list").addEventListener("click", (e) => {
+  //   const url = e.target?.dataset?.serverUrl;
+  //   if (url) loadServer(url);
+  // });
+
+  // Optional: remember the choice across refreshes
+  (function restorePreference(){
+    const saved = localStorage.getItem("sandboxEnabled");
+    if (saved !== null) {
+      const enabled = saved === "true";
+      sandboxToggle.checked = enabled;
+      applySandbox(enabled);
+    }
+  })();
+  // Save on change
+  sandboxToggle.addEventListener("change", () => {
+    localStorage.setItem("sandboxEnabled", sandboxToggle.checked ? "true" : "false");
+  });
+</script>
+
 
 
 
