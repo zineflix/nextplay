@@ -2301,3 +2301,21 @@ meta[http-equiv="refresh"] {
   }
 }
 
+
+#sandbox-toggle-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;   /* align sandbox button to the left */
+  background-color: #8A00C4;
+  color: white;
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  z-index: 1100;
+}
+
+#sandbox-toggle-btn:hover {
+  background-color: black;
+}
