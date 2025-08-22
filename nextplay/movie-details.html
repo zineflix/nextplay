@@ -106,14 +106,8 @@
 <div id="iframe-container" style="display:none;">
     <button id="close-iframe-btn">Close</button>
     <button id="change-server-btn">Change Server</button>
-
-    <!-- Sandbox Toggle Controls -->
-    <div style="margin:10px;">
-      <button id="toggleSandbox">Toggle Sandbox</button>
-      <span id="sandboxStatus" style="color:yellow; margin-left:10px;">Sandbox is ON</span>
-    </div>
-
-    
+    <!-- Sandbox toggle button (NEW) -->
+    <button id="toggleSandbox" class="sandbox-btn">Sandbox: ON</button> 
     <button onclick="toggleFullscreen()" class="fullscreen-btn">Fullscreen</button>
         <!-- Dropdown for changing server -->
         <div id="server-dropdown" class="server-dropdown" style="display:none;">
@@ -388,6 +382,7 @@ const firebaseConfig = {
     
 </body>
 </html>
+
 
 
 
