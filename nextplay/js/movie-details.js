@@ -569,89 +569,35 @@ function toggleFullscreen() {
 ///////
 
 
-  // UI
-  const sandboxToggle = document.getElementById("sandbox-toggle");
+const sandboxToggle = document.getElementById("sandbox-toggle");
   const sandboxLabel  = document.getElementById("sandbox-label");
+  let isSandboxOn = sandboxToggle.checked;
 
-  // State
-  let isSandboxOn = sandboxToggle?.checked ?? true;
+  const iframe = document.getElementById("movie-iframe");
 
-  const getIframe = () => document.getElementById("movie-iframe");
-
-  function updateLabel() {
-    sandboxLabel.textContent = isSandboxOn ? "Sandbox ON" : "Sandbox OFF";
-  }
-
-  // Add cache-busting so same-URL navigations actually reload
-  function addCacheBust(url) {
-    try {
-      const u = new URL(url, window.location.href);
-      u.searchParams.set("_ts", Date.now().toString());
-      u.searchParams.set("_sb", isSandboxOn ? "1" : "0"); // useful for debugging
-      return u.toString();
-    } catch { return url; }
-  }
-
-  // Recreate the iframe so the new sandbox mode is applied, then load the server URL
-  function rebuildIframe(nextUrl) {
-    const container = document.getElementById("iframe-container");
-    const old = getIframe();
-
-    const fresh = document.createElement("iframe");
-    fresh.id = "movie-iframe";
-    fresh.width = "100%";
-    fresh.height = old?.height || "400";
-    fresh.frameBorder = "0";
-    fresh.setAttribute("allowfullscreen", "");
-    fresh.referrerPolicy = "no-referrer";
-    fresh.scrolling = "no";
-
-    if (isSandboxOn) {
-      fresh.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
-    }
-    if (nextUrl) fresh.src = addCacheBust(nextUrl);
-
-    container.replaceChild(fresh, old);
-  }
-
-  // Public loader: use this everywhere (initial load + when changing servers)
+  // Apply sandbox state before loading any URL
   function loadServer(url) {
-    rebuildIframe(url);
+    if (isSandboxOn) {
+      iframe.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
+      sandboxLabel.textContent = "Sandbox ON";
+    } else {
+      iframe.removeAttribute("sandbox");
+      sandboxLabel.textContent = "Sandbox OFF";
+    }
+    iframe.src = url;
   }
 
-  // Toggle handler: flip sandbox, then reload the *current server*
+  // Toggle ON/OFF
   sandboxToggle.addEventListener("change", () => {
     isSandboxOn = sandboxToggle.checked;
-    updateLabel();
-
-    const current = getIframe().src;
-    if (current) {
-      loadServer(current);        // reload that server with new sandbox mode
+    // Reload current server if already loaded
+    if (iframe.src) {
+      loadServer(iframe.src);
     }
   });
 
-  // Example: wire your server picker to use loadServer()
-  // document.getElementById("server-list").addEventListener("click", (e) => {
-  //   const li = e.target.closest("[data-server-url]");
-  //   if (li?.dataset?.serverUrl) loadServer(li.dataset.serverUrl);
-  // });
-
-  // Optional: remember preference
-  (function restorePreference(){
-    const saved = localStorage.getItem("sandboxEnabled");
-    if (saved !== null) {
-      isSandboxOn = saved === "true";
-      sandboxToggle.checked = isSandboxOn;
-      updateLabel();
-    } else {
-      updateLabel();
-    }
-  })();
-
-  sandboxToggle.addEventListener("change", () => {
-    localStorage.setItem("sandboxEnabled", isSandboxOn ? "true" : "false");
-  });
-
+  // Example usage:
+  // loadServer("https://example.com/video");
 
 
 
