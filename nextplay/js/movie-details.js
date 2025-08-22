@@ -567,59 +567,33 @@ function toggleFullscreen() {
 
 
 ///////
-// sandbox-control.js (example file)
-
-// Track state
-let isSandboxOn = true;
-
-// Utility: rebuild iframe with/without sandbox
-function rebuildIframe(url) {
-  const container = document.getElementById("iframe-container");
-  const old = document.getElementById("movie-iframe");
-  if (old) old.remove();
-
-  const fresh = document.createElement("iframe");
-  fresh.id = "movie-iframe";
-  fresh.width = "100%";
-  fresh.height = "400";
-  fresh.frameBorder = "0";
-  fresh.allowFullscreen = true;
-  fresh.referrerPolicy = "no-referrer";
-  fresh.scrolling = "no";
-
-  if (isSandboxOn) {
-    fresh.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
-    document.getElementById("sandbox-label").textContent = "Sandbox ON";
-  } else {
-    document.getElementById("sandbox-label").textContent = "Sandbox OFF";
-  }
-
-  if (url) fresh.src = url;
-  container.appendChild(fresh);
-}
-
-// Public loader: always call this when changing server
-export function loadServer(url) {
-  rebuildIframe(url);
-}
-
-// Initialize toggle listener
-export function initSandboxToggle() {
-  const toggle = document.getElementById("sandbox-toggle");
-  if (!toggle) return;
-
-  isSandboxOn = toggle.checked;
-
-  toggle.addEventListener("change", () => {
-    isSandboxOn = toggle.checked;
-    const currentUrl = document.getElementById("movie-iframe")?.src || "";
-    rebuildIframe(currentUrl);
-  });
-}
-
-
-import { initSandboxToggle } from "./sandbox-control.js";
-
 document.addEventListener("DOMContentLoaded", () => {
-  initSandboxToggle();
+  const sandboxBtn = document.getElementById("toggleSandbox");
+  const sandboxStatus = document.getElementById("sandboxStatus");
+
+  if (sandboxBtn && sandboxStatus) {
+    sandboxBtn.addEventListener("click", () => {
+      // Apply toggle to ALL iframes (movie, trailer, server iframes, etc.)
+      document.querySelectorAll("iframe").forEach(iframe => {
+        if (iframe.hasAttribute("sandbox")) {
+          iframe.removeAttribute("sandbox"); // Turn OFF
+          sandboxStatus.textContent = "Sandbox is OFF";
+        } else {
+          iframe.setAttribute(
+            "sandbox",
+            "allow-scripts allow-presentation allow-same-origin"
+          ); // Turn ON
+          sandboxStatus.textContent = "Sandbox is ON";
+        }
+
+        // Reload iframe if it already has a source
+        if (iframe.src) {
+          const currentSrc = iframe.src;
+          iframe.src = "";
+          iframe.src = currentSrc;
+        }
+      });
+    });
+  }
 });
+
