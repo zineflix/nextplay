@@ -569,64 +569,87 @@ function toggleFullscreen() {
 ///////
 
 
-  const iframe = document.getElementById("movie-iframe");
+  // UI
   const sandboxToggle = document.getElementById("sandbox-toggle");
   const sandboxLabel  = document.getElementById("sandbox-label");
 
-  // Global state so any "change server" code can respect it
-  let isSandboxOn = true;
+  // State
+  let isSandboxOn = sandboxToggle?.checked ?? true;
 
-  // Call this before loading/refreshing iframe
-  function applySandbox(enabled) {
-    isSandboxOn = enabled;
-    if (enabled) {
-      iframe.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
-      sandboxLabel.textContent = "Sandbox ON";
-    } else {
-      iframe.removeAttribute("sandbox");
-      sandboxLabel.textContent = "Sandbox OFF";
+  const getIframe = () => document.getElementById("movie-iframe");
+
+  function updateLabel() {
+    sandboxLabel.textContent = isSandboxOn ? "Sandbox ON" : "Sandbox OFF";
+  }
+
+  // Add cache-busting so same-URL navigations actually reload
+  function addCacheBust(url) {
+    try {
+      const u = new URL(url, window.location.href);
+      u.searchParams.set("_ts", Date.now().toString());
+      u.searchParams.set("_sb", isSandboxOn ? "1" : "0"); // useful for debugging
+      return u.toString();
+    } catch { return url; }
+  }
+
+  // Recreate the iframe so the new sandbox mode is applied, then load the server URL
+  function rebuildIframe(nextUrl) {
+    const container = document.getElementById("iframe-container");
+    const old = getIframe();
+
+    const fresh = document.createElement("iframe");
+    fresh.id = "movie-iframe";
+    fresh.width = "100%";
+    fresh.height = old?.height || "400";
+    fresh.frameBorder = "0";
+    fresh.setAttribute("allowfullscreen", "");
+    fresh.referrerPolicy = "no-referrer";
+    fresh.scrolling = "no";
+
+    if (isSandboxOn) {
+      fresh.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
     }
+    if (nextUrl) fresh.src = addCacheBust(nextUrl);
+
+    container.replaceChild(fresh, old);
   }
 
-  // Force a navigation so the new sandbox mode actually takes effect
-  function reloadIframe() {
-    const current = iframe.src;
-    if (!current) return;
-    iframe.src = "about:blank";            // ensure a real navigation
-    setTimeout(() => { iframe.src = current; }, 0);
+  // Public loader: use this everywhere (initial load + when changing servers)
+  function loadServer(url) {
+    rebuildIframe(url);
   }
 
-  // Toggle handler
+  // Toggle handler: flip sandbox, then reload the *current server*
   sandboxToggle.addEventListener("change", () => {
-    applySandbox(sandboxToggle.checked);
-    reloadIframe();                        // <-- important
+    isSandboxOn = sandboxToggle.checked;
+    updateLabel();
+
+    const current = getIframe().src;
+    if (current) {
+      loadServer(current);        // reload that server with new sandbox mode
+    }
   });
 
-  // If you have a function that loads/changes servers, use this pattern:
-  // (call this instead of setting iframe.src directly)
-  function loadServer(url) {
-    applySandbox(isSandboxOn);             // keep current mode
-    iframe.src = url;
-  }
-
-  // Example wiring for your "Change Server" UI:
+  // Example: wire your server picker to use loadServer()
   // document.getElementById("server-list").addEventListener("click", (e) => {
-  //   const url = e.target?.dataset?.serverUrl;
-  //   if (url) loadServer(url);
+  //   const li = e.target.closest("[data-server-url]");
+  //   if (li?.dataset?.serverUrl) loadServer(li.dataset.serverUrl);
   // });
 
-  // Optional: remember the choice across refreshes
+  // Optional: remember preference
   (function restorePreference(){
     const saved = localStorage.getItem("sandboxEnabled");
     if (saved !== null) {
-      const enabled = saved === "true";
-      sandboxToggle.checked = enabled;
-      applySandbox(enabled);
+      isSandboxOn = saved === "true";
+      sandboxToggle.checked = isSandboxOn;
+      updateLabel();
+    } else {
+      updateLabel();
     }
   })();
-  // Save on change
+
   sandboxToggle.addEventListener("change", () => {
-    localStorage.setItem("sandboxEnabled", sandboxToggle.checked ? "true" : "false");
+    localStorage.setItem("sandboxEnabled", isSandboxOn ? "true" : "false");
   });
 
 
