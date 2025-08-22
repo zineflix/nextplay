@@ -106,7 +106,14 @@
 <div id="iframe-container" style="display:none;">
     <button id="close-iframe-btn">Close</button>
     <button id="change-server-btn">Change Server</button>
-    <button id="sandbox-toggle-btn">Disable Sandbox</button>
+
+    <!-- Sandbox Toggle Switch -->
+    <label class="switch">
+      <input type="checkbox" id="sandbox-toggle" checked>
+      <span class="slider round"></span>
+    </label>
+    <span id="sandbox-label">Sandbox ON</span>
+    
     <button onclick="toggleFullscreen()" class="fullscreen-btn">Fullscreen</button>
         <!-- Dropdown for changing server -->
         <div id="server-dropdown" class="server-dropdown" style="display:none;">
@@ -381,6 +388,7 @@ const firebaseConfig = {
     
 </body>
 </html>
+
 
 
 
