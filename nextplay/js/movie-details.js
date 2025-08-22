@@ -567,19 +567,22 @@ function toggleFullscreen() {
 
 
 ///////
+
   const iframe = document.getElementById("movie-iframe");
-  const sandboxBtn = document.getElementById("sandbox-toggle-btn");
+  const sandboxToggle = document.getElementById("sandbox-toggle");
+  const sandboxLabel = document.getElementById("sandbox-label");
 
-  let sandboxEnabled = true;
-
-  sandboxBtn.addEventListener("click", () => {
-    if (sandboxEnabled) {
-      iframe.removeAttribute("sandbox");
-      sandboxBtn.textContent = "Enable Sandbox";
-    } else {
+  sandboxToggle.addEventListener("change", () => {
+    if (sandboxToggle.checked) {
+      // Enable sandbox
       iframe.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
-      sandboxBtn.textContent = "Disable Sandbox";
+      sandboxLabel.textContent = "Sandbox ON";
+    } else {
+      // Disable sandbox
+      iframe.removeAttribute("sandbox");
+      sandboxLabel.textContent = "Sandbox OFF";
     }
-    sandboxEnabled = !sandboxEnabled;
   });
+
+
 
