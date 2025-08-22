@@ -564,3 +564,22 @@ function toggleFullscreen() {
     }  
 }
 // Fullscreen Button Movie End //
+
+
+///////
+  const iframe = document.getElementById("movie-iframe");
+  const sandboxBtn = document.getElementById("sandbox-toggle-btn");
+
+  let sandboxEnabled = true;
+
+  sandboxBtn.addEventListener("click", () => {
+    if (sandboxEnabled) {
+      iframe.removeAttribute("sandbox");
+      sandboxBtn.textContent = "Enable Sandbox";
+    } else {
+      iframe.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
+      sandboxBtn.textContent = "Disable Sandbox";
+    }
+    sandboxEnabled = !sandboxEnabled;
+  });
+
