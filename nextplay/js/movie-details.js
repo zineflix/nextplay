@@ -567,38 +567,59 @@ function toggleFullscreen() {
 
 
 ///////
+// sandbox-control.js (example file)
 
+// Track state
+let isSandboxOn = true;
 
-const sandboxToggle = document.getElementById("sandbox-toggle");
-  const sandboxLabel  = document.getElementById("sandbox-label");
-  let isSandboxOn = sandboxToggle.checked;
+// Utility: rebuild iframe with/without sandbox
+function rebuildIframe(url) {
+  const container = document.getElementById("iframe-container");
+  const old = document.getElementById("movie-iframe");
+  if (old) old.remove();
 
-  const iframe = document.getElementById("movie-iframe");
+  const fresh = document.createElement("iframe");
+  fresh.id = "movie-iframe";
+  fresh.width = "100%";
+  fresh.height = "400";
+  fresh.frameBorder = "0";
+  fresh.allowFullscreen = true;
+  fresh.referrerPolicy = "no-referrer";
+  fresh.scrolling = "no";
 
-  // Apply sandbox state before loading any URL
-  function loadServer(url) {
-    if (isSandboxOn) {
-      iframe.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
-      sandboxLabel.textContent = "Sandbox ON";
-    } else {
-      iframe.removeAttribute("sandbox");
-      sandboxLabel.textContent = "Sandbox OFF";
-    }
-    iframe.src = url;
+  if (isSandboxOn) {
+    fresh.setAttribute("sandbox", "allow-scripts allow-presentation allow-same-origin");
+    document.getElementById("sandbox-label").textContent = "Sandbox ON";
+  } else {
+    document.getElementById("sandbox-label").textContent = "Sandbox OFF";
   }
 
-  // Toggle ON/OFF
-  sandboxToggle.addEventListener("change", () => {
-    isSandboxOn = sandboxToggle.checked;
-    // Reload current server if already loaded
-    if (iframe.src) {
-      loadServer(iframe.src);
-    }
+  if (url) fresh.src = url;
+  container.appendChild(fresh);
+}
+
+// Public loader: always call this when changing server
+export function loadServer(url) {
+  rebuildIframe(url);
+}
+
+// Initialize toggle listener
+export function initSandboxToggle() {
+  const toggle = document.getElementById("sandbox-toggle");
+  if (!toggle) return;
+
+  isSandboxOn = toggle.checked;
+
+  toggle.addEventListener("change", () => {
+    isSandboxOn = toggle.checked;
+    const currentUrl = document.getElementById("movie-iframe")?.src || "";
+    rebuildIframe(currentUrl);
   });
-
-  // Example usage:
-  // loadServer("https://example.com/video");
+}
 
 
+import { initSandboxToggle } from "./sandbox-control.js";
 
-
+document.addEventListener("DOMContentLoaded", () => {
+  initSandboxToggle();
+});
