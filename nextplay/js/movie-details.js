@@ -568,7 +568,7 @@ function toggleFullscreen() {
 
 ///////
 
-<script>
+
   const iframe = document.getElementById("movie-iframe");
   const sandboxToggle = document.getElementById("sandbox-toggle");
   const sandboxLabel  = document.getElementById("sandbox-label");
@@ -628,7 +628,7 @@ function toggleFullscreen() {
   sandboxToggle.addEventListener("change", () => {
     localStorage.setItem("sandboxEnabled", sandboxToggle.checked ? "true" : "false");
   });
-</script>
+
 
 
 
