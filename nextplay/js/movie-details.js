@@ -574,17 +574,17 @@ document.addEventListener("DOMContentLoaded", () => {
     sandboxBtn.addEventListener("click", () => {
       document.querySelectorAll("iframe").forEach(iframe => {
         if (iframe.hasAttribute("sandbox")) {
-          iframe.removeAttribute("sandbox'); // Turn OFF
+          iframe.removeAttribute("sandbox"); // Turn OFF
           sandboxBtn.textContent = "Sandbox: OFF";
         } else {
           iframe.setAttribute(
             "sandbox",
             "allow-scripts allow-presentation allow-same-origin"
-          );
+          ); // Turn ON
           sandboxBtn.textContent = "Sandbox: ON";
         }
 
-        // Reload iframe if it already has a src
+        // Reload iframe to apply change
         if (iframe.src) {
           const currentSrc = iframe.src;
           iframe.src = "";
@@ -594,5 +594,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-
